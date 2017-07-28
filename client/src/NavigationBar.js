@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Navbar, Nav, NavItem } from 'react-bootstrap';
+import { LinkContainer } from 'react-router-bootstrap';
 
 class NavigationBar extends Component {
   render() {
@@ -13,9 +14,9 @@ class NavigationBar extends Component {
           </Navbar.Header>
           <Navbar.Collapse>
             <Nav pullRight>
-              <NavItem>Home</NavItem>
+              <LinkContainer to="/"><NavItem>Home</NavItem></LinkContainer>
               <NavItem>My Polls</NavItem>
-              <NavItem>New Poll</NavItem>
+              <LinkContainer to="/newpoll"><NavItem>New Poll</NavItem></LinkContainer>
               <NavItem>Account</NavItem>
             </Nav>
           </Navbar.Collapse>
