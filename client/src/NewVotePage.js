@@ -18,18 +18,23 @@ class NewVotePage extends Component {
     }
 
     handleNameChange(e) {
-        this.setState({ voteName: e.target.value });
+        //limit name size to 50 characters
+        if (e.target.value.length < 50) {
+            this.setState({ voteName: e.target.value });
+        }
     }
 
     handleOptionChange(index, e) {
-        let newState = update(
+        //limit option size to 50 characters
+        if (e.target.value.length < 50) {
+            this.setState(update(
                 this.state,{
                     voteOptions: {
                         [index]: {$set: e.target.value}
                     }
                 }
-            );
-        this.setState(newState);
+            ));
+        }
     }
 
     //add an empty string to end of options array
