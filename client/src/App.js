@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
 import NavigationBar from './NavigationBar.js';
+import HomePage from './HomePage.js';
 
 
 class App extends Component {
@@ -8,6 +9,7 @@ class App extends Component {
     return (
       <div className="App">
         <NavigationBar />
+        <HomePage />
       </div>
     );
   }
