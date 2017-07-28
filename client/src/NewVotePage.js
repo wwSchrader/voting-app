@@ -10,6 +10,7 @@ class NewVotePage extends Component {
             voteOptions: ['', '']
         };
     this.handleNameChange = this.handleNameChange.bind(this);
+    this.handleAddOption = this.handleAddOption.bind(this);
     }
 
     handleNameChange(e) {
@@ -25,6 +26,15 @@ class NewVotePage extends Component {
                 }
             );
         this.setState(newState);
+    }
+
+    //add an empty string to end of options array
+    handleAddOption() {
+        this.setState(update(this.state,{
+            voteOptions: {
+                $push: ['']
+            }
+        }));
     }
 
   render() {
@@ -59,6 +69,9 @@ class NewVotePage extends Component {
                     {voteOptions}
                     <FormControl.Feedback />
             </FormGroup>
+            <Button onClick={this.handleAddOption}>
+                Add option
+            </Button>
             <Button bsStyle="primary" type="submit">
                 Create Vote
             </Button>
