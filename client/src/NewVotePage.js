@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import update from 'immutability-helper';
-import { PageHeader, FormGroup, ControlLabel, FormControl } from 'react-bootstrap';
+import { PageHeader, FormGroup, ControlLabel, FormControl, Button } from 'react-bootstrap';
 
 class NewVotePage extends Component {
     constructor(props) {
@@ -59,6 +59,9 @@ class NewVotePage extends Component {
                     {voteOptions}
                     <FormControl.Feedback />
             </FormGroup>
+            <Button bsStyle="primary" type="submit">
+                Create Vote
+            </Button>
           </form>
       </div>
     );
