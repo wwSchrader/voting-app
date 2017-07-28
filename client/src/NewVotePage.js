@@ -1,16 +1,20 @@
 import React, { Component } from 'react';
 import update from 'immutability-helper';
-import { PageHeader, FormGroup, ControlLabel, FormControl, Button } from 'react-bootstrap';
+import { PageHeader, FormGroup, ControlLabel, FormControl, Button, HelpBlock } from 'react-bootstrap';
 
 class NewVotePage extends Component {
     constructor(props) {
         super(props);
         this.state = {
             voteName: '',
-            voteOptions: ['', '']
+            voteOptions: ['', ''],
+            submitButtonPressed: false
         };
     this.handleNameChange = this.handleNameChange.bind(this);
     this.handleAddOption = this.handleAddOption.bind(this);
+    this.handleRemoveOption = this.handleRemoveOption.bind(this);
+    this.validateName = this.validateName.bind(this);
+    this.onSubmitButtonPress = this.onSubmitButtonPress.bind(this);
     }
 
     handleNameChange(e) {
@@ -37,24 +41,89 @@ class NewVotePage extends Component {
         }));
     }
 
+    //remove last element from options array
+    handleRemoveOption(){
+        this.setState(update(this.state,{
+            voteOptions: {
+                $splice: [[this.state.voteOptions.length - 1, 1]]
+            }
+        }));
+    }
+
+    validateName(){
+        if (this.state.submitButtonPressed) {
+            if (this.state.voteName.length === 0) {
+                return "error";
+            } else {
+                return "success";
+            }
+        } else {
+            return null;
+        }
+    }
+
+    validateOption(index, e) {
+        if (this.state.submitButtonPressed) {
+            if (this.state.voteOptions[index].length === 0) {
+                return "error";
+            } else {
+                return "success";
+            }
+        } else {
+            return null;
+        }
+    }
+
+    onSubmitButtonPress(e) {
+         this.setState(update(this.state,{
+            submitButtonPressed: {
+               $set: true
+            }
+        }));
+
+        e.preventDefault();
+    }
+
+    renderHelpBock(validationStatus) {
+        if (validationStatus === 'error') {
+            return (<HelpBlock>Can't Be Empty!</HelpBlock>);
+        }
+    }
+
   render() {
     let voteOptions = this.state.voteOptions.map((option, index) => {
+        let validationStatus = this.validateOption.bind(this, index)();
         return (
-            <FormControl key={index}
-                type="text"
-                value={this.state.voteOptions[index]}
-                placeholder="Name of option"
-                onChange={this.handleOptionChange.bind(this, index)}
-            />
+            <FormGroup key={index} controlId={"formVoteOptions" + index} validationState={validationStatus}>
+                <FormControl key={index}
+                    type="text"
+                    value={this.state.voteOptions[index]}
+                    placeholder="Name of option"
+                    onChange={this.handleOptionChange.bind(this, index)}
+                />
+                {this.renderHelpBock(validationStatus)}
+                <FormControl.Feedback />
+            </FormGroup>
         );
-    })
+    });
+
+    let voteRemoveOptionButton = () => {
+        //show remove option button if there are more than 2 option
+        if (this.state.voteOptions.length > 2) {
+            return (
+                <Button bsStyle="danger" onClick={this.handleRemoveOption}>
+                    Remove option
+                </Button>
+            );
+        }
+    }
     return (
       <div className="Home">
         <PageHeader>Create a new Vote.</PageHeader>
         <p>Fill out the form below to create your vote!</p>
 
-          <form>
-            <FormGroup controlId="formVoteName">
+          <form onSubmit={this.onSubmitButtonPress}>
+            <FormGroup controlId="formVoteName" validationState={this.validateName()}>
                 <ControlLabel>Vote Name</ControlLabel>
                 <FormControl
                     type="text"
@@ -62,16 +131,15 @@ class NewVotePage extends Component {
                     placeholder="Name of the Vote"
                     onChange={this.handleNameChange}
                 />
+                {this.renderHelpBock(this.validateName)}
                 <FormControl.Feedback />
             </FormGroup>
-            <FormGroup controlId="formVoteOptions">
-                <ControlLabel>Vote Options</ControlLabel>
-                    {voteOptions}
-                    <FormControl.Feedback />
-            </FormGroup>
+            <h3>Vote Options</h3>
+            {voteOptions}
             <Button onClick={this.handleAddOption}>
                 Add option
             </Button>
+            {voteRemoveOptionButton()}
             <Button bsStyle="primary" type="submit">
                 Create Vote
             </Button>
