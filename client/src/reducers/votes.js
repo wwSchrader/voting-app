@@ -1,7 +1,6 @@
 const votes = (state = [], action) => {
     switch (action.type) {
         case 'CREATE_VOTE':
-            console.log(action);
             return [
                 ...state,
                 {

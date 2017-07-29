@@ -27,8 +27,6 @@ class NewVotePage extends Component {
             voteOptions: this.state.voteOptions
         });
 
-        console.log("vote handled");
-
         withRouter(({ history }) => (
             history.push('/')));
     }
@@ -96,7 +94,6 @@ class NewVotePage extends Component {
     }
 
     onSubmitButtonPress(e) {
-        console.log(e);
          this.setState(update(this.state,{
             submitButtonPressed: {
                $set: true
