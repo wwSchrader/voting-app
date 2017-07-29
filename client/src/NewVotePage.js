@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import update from 'immutability-helper';
 import { PageHeader, FormGroup, ControlLabel, FormControl, Button, HelpBlock } from 'react-bootstrap';
+import { connect } from 'react-redux';
+import { createVote } from './actions';
+import { withRouter } from 'react-router-dom'
 
 class NewVotePage extends Component {
     constructor(props) {
@@ -15,6 +18,19 @@ class NewVotePage extends Component {
     this.handleRemoveOption = this.handleRemoveOption.bind(this);
     this.validateName = this.validateName.bind(this);
     this.onSubmitButtonPress = this.onSubmitButtonPress.bind(this);
+    this.handleCreateVote = this.handleCreateVote.bind(this);
+    }
+
+    handleCreateVote() {
+        this.props.createVote({
+            voteName: this.state.voteName,
+            voteOptions: this.state.voteOptions
+        });
+
+        console.log("vote handled");
+
+        withRouter(({ history }) => (
+            history.push('/')));
     }
 
     handleNameChange(e) {
@@ -80,11 +96,29 @@ class NewVotePage extends Component {
     }
 
     onSubmitButtonPress(e) {
+        console.log(e);
          this.setState(update(this.state,{
             submitButtonPressed: {
                $set: true
             }
         }));
+
+         //check to see if name is not empty
+         if (this.state.voteName.length !== 0) {
+            let isValidated = true;
+            //check if any of the options are empty
+            this.state.voteOptions.map((option) => {
+                if (option.length === 0) {
+                    isValidated = false;
+                }
+                return true;
+            });
+
+            //if validate, update store
+            if (isValidated) {
+                this.handleCreateVote();
+            }
+         }
 
         e.preventDefault();
     }
@@ -154,4 +188,16 @@ class NewVotePage extends Component {
   }
 }
 
-export default NewVotePage;
+const mapStateToProps = (state) => {
+    return {
+        votes: state.votes
+    };
+};
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        createVote: (newVote) => dispatch(createVote(newVote))
+    };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(NewVotePage);

@@ -3,7 +3,7 @@ import './App.css';
 import NavigationBar from './NavigationBar.js';
 import HomePage from './HomePage.js';
 import NewVotePage from './NewVotePage.js';
-import { Route } from 'react-router-dom'
+import { Route } from 'react-router-dom';
 
 
 class App extends Component {

@@ -1,18 +1,12 @@
 import React, { Component } from 'react';
 import { Button } from 'react-bootstrap';
+import { connect } from 'react-redux';
 
 class VoteListButtons extends Component {
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            voteList: ["Election", "Star Wars", "Star Trek", "Game Of Thrones"]
-        };
-    }
-
   render() {
-    let voteButton = this.state.voteList.map(vote => {
-        return (<Button key={vote}>{vote}</Button>);
+    console.log(this.props.votes);
+    let voteButton = this.props.votes.map(vote => {
+        return (<Button key={vote.id}>{vote.vote.voteName}</Button>);
     });
 
     return (
@@ -23,4 +17,11 @@ class VoteListButtons extends Component {
   }
 }
 
-export default VoteListButtons;
+const mapStateToProps = (state) => {
+    console.log(state);
+    return {
+        votes: state.votes
+    };
+};
+
+export default connect(mapStateToProps)(VoteListButtons);
