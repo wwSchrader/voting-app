@@ -1,11 +1,16 @@
 import React, { Component } from 'react';
 import { Button } from 'react-bootstrap';
 import { connect } from 'react-redux';
+import { votesFetchData } from './actions/index';
 
 class VoteListButtons extends Component {
+    componentDidMount() {
+        this.props.fetchData();
+    }
+
   render() {
-    let voteButton = this.props.votes.map(vote => {
-        return (<Button key={vote.id}>{vote.vote.voteName}</Button>);
+    let voteButton = this.props.votes.map((vote, index) => {
+        return (<Button key={vote + index}>{vote.voteName}</Button>);
     });
 
     return (
@@ -18,8 +23,16 @@ class VoteListButtons extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        votes: state.votes
+        votes: state.votes,
+        hasErrored: state.voteHasErrored,
+        isLoading: state.votesIsLoading
     };
 };
 
-export default connect(mapStateToProps)(VoteListButtons);
+const mapDispatchToProps = (dispatch) => {
+    return {
+        fetchData: (url) => dispatch(votesFetchData())
+    };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(VoteListButtons);

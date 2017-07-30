@@ -22,13 +22,28 @@ class NewVotePage extends Component {
     }
 
     handleCreateVote() {
-        this.props.createVote({
+        let newVote = {
             voteName: this.state.voteName,
             voteOptions: this.state.voteOptions
-        });
+        };
 
-        withRouter(({ history }) => (
-            history.push('/')));
+        this.props.createVote(newVote);
+
+        let myHeaders = new Headers();
+        myHeaders.append('Content-Type', 'application/json');
+
+        let postData = {
+            method: 'POST',
+            body: JSON.stringify(newVote),
+            headers: myHeaders
+        }
+
+        fetch('/api/addvote', postData)
+            .then((response) => {
+                if (!response.ok) {
+                    throw Error(response.statusText);
+                }
+            });
     }
 
     handleNameChange(e) {

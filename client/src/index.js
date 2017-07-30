@@ -5,10 +5,9 @@ import App from './App';
 import registerServiceWorker from './registerServiceWorker';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
-import { createStore } from 'redux';
-import voteApp from './reducers/index.js';
+import configureStore from './store/configureStore';
 
-let store = createStore(voteApp);
+const store = configureStore();
 
 ReactDOM.render(
     <Provider store={store}>

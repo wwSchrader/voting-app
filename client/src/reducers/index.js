@@ -1,8 +1,10 @@
-import votes from './votes.js';
+import { votes, voteHasErrored, votesIsLoading } from './votes.js';
 import { combineReducers } from 'redux'
 
 const voteApp = combineReducers({
-    votes
+    votes,
+    voteHasErrored,
+    votesIsLoading
 });
 
 export default voteApp;
