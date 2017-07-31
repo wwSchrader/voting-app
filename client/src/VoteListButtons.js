@@ -9,6 +9,7 @@ class VoteListButtons extends Component {
     }
 
   render() {
+    console.log(this.props.votes);
     let voteButton = this.props.votes.map((vote, index) => {
         return (<Button key={vote + index}>{vote.voteName}</Button>);
     });

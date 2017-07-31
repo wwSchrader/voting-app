@@ -23,6 +23,7 @@ export function votesIsLoading(bool) {
 }
 
 export function votesFetchDataSuccess(items) {
+    console.log(items);
     return {
         type: 'VOTE_POST_DATA_SUCCESS',
         items
