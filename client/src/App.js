@@ -3,6 +3,7 @@ import './App.css';
 import NavigationBar from './NavigationBar.js';
 import HomePage from './HomePage.js';
 import NewVotePage from './NewVotePage.js';
+import VotingPage from './VotingPage.js';
 import { Route } from 'react-router-dom';
 
 
@@ -13,6 +14,7 @@ class App extends Component {
         <NavigationBar />
         <Route exact path="/" component={HomePage} />
         <Route path="/newpoll" component={NewVotePage} />
+        <Route path="/vote/:id" component={VotingPage} />
       </div>
     );
   }
