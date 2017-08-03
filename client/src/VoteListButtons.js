@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { Button } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { votesFetchData } from './actions/index';
+import PollTitleButton from './PollTitleButton.js';
 
 class VoteListButtons extends Component {
     componentDidMount() {
@@ -9,9 +9,13 @@ class VoteListButtons extends Component {
     }
 
   render() {
-    console.log(this.props.votes);
     let voteButton = this.props.votes.map((vote, index) => {
-        return (<Button key={vote + index}>{vote.voteName}</Button>);
+        return (
+            <PollTitleButton
+                key={vote._id}
+                pollId={vote._id}
+                pollName={vote.voteName}/>
+        );
     });
 
     return (

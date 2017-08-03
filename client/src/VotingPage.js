@@ -4,8 +4,6 @@ class VotingPage extends Component {
     constructor(props) {
         super(props);
 
-        console.log(props);
-
         this.pollId = this.props.match.params.id;
     }
 
