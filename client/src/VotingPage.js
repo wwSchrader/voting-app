@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { votesFetchSinglePoll } from './actions';
+import { FormGroup, Radio, ControlLabel, Button, InputGroup, FormControl } from 'react-bootstrap';
 
 class VotingPage extends Component {
     constructor(props) {
@@ -18,16 +19,31 @@ class VotingPage extends Component {
         var options = [];
         if (typeof this.props.singlePoll.voteOptions !== 'undefined') {
             options = this.props.singlePoll.voteOptions.map((option) => {
-                return (<li key={option}>{option}</li>);
+                return (<Radio name="optionRadioGroup" key={option}>{option}</Radio>);
             });
         }
 
         return(
             <div>
                 <h3>Vote: {this.props.singlePoll.voteName}</h3>
-                <ul>
-                    {options}
-                </ul>
+                <form>
+                    <FormGroup>
+                        <ControlLabel>Vote for an option:</ControlLabel>
+                        {options}
+                        <InputGroup>
+                            <InputGroup.Addon>
+                                <input type="radio" name="optionRadioGroup" />
+                            </InputGroup.Addon>
+                            <FormControl type="text" placeholder="Enter a new option"/>
+                        </InputGroup>
+                    </FormGroup>
+                    <Button type="submit" bsStyle="primary">
+                        Vote
+                    </Button>
+                    <Button bsStyle="danger">
+                        Delete Poll
+                    </Button>
+                </form>
             </div>
         );
     }
