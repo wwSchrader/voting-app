@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Button } from 'react-bootstrap';
+import { Route } from 'react-router-dom';
 
 class PollTitleButton extends Component {
     constructor(props) {
@@ -8,18 +9,16 @@ class PollTitleButton extends Component {
             pollId: props.pollId,
             pollName: props.pollName
         }
-
-        this.onButtonPress = this.onButtonPress.bind(this);
-    }
-
-    onButtonPress(e) {
-        console.log(this.state.pollId);
     }
 
     render() {
-        console.log(this.state);
         return (
-            <Button onClick={this.onButtonPress}>{this.state.pollName}</Button>
+            <Route render={({ history }) => (
+                <Button
+                    onClick={() => { history.push('/vote/' + this.state.pollId)}}>
+                    {this.state.pollName}
+                </Button>
+            )} />
         );
     }
 }
