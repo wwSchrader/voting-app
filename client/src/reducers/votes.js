@@ -22,3 +22,12 @@ export function votes(state = [], action) {
             return state;
     }
 }
+
+export function singlePoll(state = {}, action) {
+    switch (action.type) {
+        case 'SINGLE_POLL_FETCH_DATA_SUCCESS':
+            return action.items;
+        default:
+            return state;
+    }
+}

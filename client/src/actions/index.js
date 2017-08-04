@@ -30,6 +30,13 @@ export function votesFetchDataSuccess(items) {
     };
 }
 
+export function singlePollFetchDataSuccess(items) {
+    return {
+        type: 'SINGLE_POLL_FETCH_DATA_SUCCESS',
+        items
+    };
+}
+
 export function votesFetchData() {
     return (dispatch) => {
         dispatch (votesIsLoading(true));
@@ -49,5 +56,28 @@ export function votesFetchData() {
                 console.log(e);
                 return dispatch(voteHasErrored(true))
             });
+    };
+}
+
+export function votesFetchSinglePoll(pollId) {
+    return (dispatch) => {
+        dispatch (votesIsLoading(true));
+
+        fetch("/api/getpoll/?id=" + pollId)
+            .then((response) => {
+                if (!response.ok) {
+                    throw Error(response.statusText);
+                }
+
+                dispatch(votesIsLoading(false));
+                return response;
+            })
+            .then((response) => response.json())
+            .then((singlePoll) => dispatch(singlePollFetchDataSuccess(singlePoll)))
+            .catch((e) => {
+                console.log(e);
+                return dispatch(voteHasErrored(true))
+            }
+        );
     };
 }

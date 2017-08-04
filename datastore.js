@@ -1,6 +1,7 @@
 "use strict";
 
 var mongodb = require('mongodb');
+var ObjectId = require('mongodb').ObjectID;
 // Standard URI format: mongodb://[dbuser:dbpassword@]host:port/dbname, details set in .env
 var MONGODB_URI = process.env.MONGODB_URI;
 
@@ -46,6 +47,32 @@ function getAllNames() {
         }
       });
     } catch (ex) {
+      reject(new DatastoreUnknownExceptionGetAll(ex));
+    }
+  })
+}
+
+function getPollDetail(key) {
+  return new Promise(function (resolve, reject) {
+    try {
+      //return just the ids and vote names
+      collection.find(ObjectId(key)).toArray(function (err, arrays) {
+        if (err) {
+          reject(new DatastoreUnderlyingExceptionGetAll(err));
+        } try {
+          if(arrays===null){
+            resolve(null);
+          }
+          else{
+            resolve(arrays);
+          }
+        } catch (ex) {
+          console.log(ex);
+          reject(new DatastoreDataParsingException(arrays, ex));
+        }
+      });
+    } catch (ex) {
+      console.log(ex);
       reject(new DatastoreUnknownExceptionGetAll(ex));
     }
   })
@@ -200,6 +227,7 @@ var asyncDatastore = {
   set: set,
   get: get,
   getAllNames: getAllNames,
+  getPollDetail: getPollDetail,
   remove: remove,
   removeMany: removeMany,
   connect: connect
