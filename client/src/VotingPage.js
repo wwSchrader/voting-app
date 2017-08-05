@@ -7,12 +7,34 @@ class VotingPage extends Component {
     constructor(props) {
         super(props);
 
+        this.state = {
+            selectedRadioButton: null,
+            newOptionText: ""
+        }
+
         this.pollId = this.props.match.params.id;
         this.deletePoll = this.deletePoll.bind(this);
+        this.handleOnRadioChange = this.handleOnRadioChange.bind(this);
+        this.handleNewOptionTextChange = this.handleNewOptionTextChange.bind(this);
     }
 
     componentDidMount() {
         this.props.fetchData(this.pollId);
+    }
+
+    handleNewOptionTextChange (e) {
+        //limit text length
+        if (e.target.value.length < 50) {
+            this.setState({
+                newOptionText: e.target.value
+            });
+        }
+    }
+
+    handleOnRadioChange(e) {
+        this.setState({
+            selectedRadioButton: parseInt(e.target.value, 10)
+        });
     }
 
     deletePoll() {
@@ -30,20 +52,25 @@ class VotingPage extends Component {
     }
 
     render(){
-        console.log(this.props.singlePoll);
         var options = [];
         var results = [];
         if (typeof this.props.singlePoll.voteOptions !== 'undefined') {
-            options = this.props.singlePoll.voteOptions.map((option) => {
-                return (<Radio name="optionRadioGroup" key={option.optionName}>{option.optionName}</Radio>);
+            options = this.props.singlePoll.voteOptions.map((option, index) => {
+                return (
+                    <Radio
+                        name="optionRadioGroup"
+                        value={index}
+                        key={index + option.optionName}
+                        onChange={this.handleOnRadioChange}
+                        checked={this.state.selectedRadioButton === index}
+                        >{option.optionName}</Radio>
+                );
             });
 
              results = this.props.singlePoll.voteOptions.map((option) => {
                 return (<h4 key={"results" + option.optionName}>{option.optionName}: {option.optionVotes} </h4>)
             });
         }
-
-
 
         return(
             <div>
@@ -54,9 +81,19 @@ class VotingPage extends Component {
                         {options}
                         <InputGroup>
                             <InputGroup.Addon>
-                                <input type="radio" name="optionRadioGroup" />
+                                <input
+                                    type="radio"
+                                    name="optionRadioGroup"
+                                    value="-1"
+                                    onChange={this.handleOnRadioChange}
+                                    checked={this.state.selectedRadioButton === -1}
+                                    />
                             </InputGroup.Addon>
-                            <FormControl type="text" placeholder="Enter a new option"/>
+                            <FormControl
+                                type="text"
+                                placeholder="Enter a new option"
+                                value={this.state.newOptionText}
+                                onChange={this.handleNewOptionTextChange}/>
                         </InputGroup>
                     </FormGroup>
                     <Button type="submit" bsStyle="primary">
