@@ -3,7 +3,6 @@ import update from 'immutability-helper';
 import { PageHeader, FormGroup, ControlLabel, FormControl, Button, HelpBlock } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { createVote } from './actions';
-import { withRouter } from 'react-router-dom'
 
 class NewVotePage extends Component {
     constructor(props) {
@@ -38,12 +37,18 @@ class NewVotePage extends Component {
             headers: myHeaders
         }
 
+        //add vote and then changes url to voting page
         fetch('/api/addvote', postData)
             .then((response) => {
                 if (!response.ok) {
                     throw Error(response.statusText);
                 }
-            });
+                return response;
+            })
+            .then((response) => response.json())
+            .then((returnedInfo) => {
+                this.props.history.push('/vote/' + returnedInfo.insertedId);
+            })
     }
 
     handleNameChange(e) {

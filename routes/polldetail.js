@@ -16,7 +16,8 @@ router.get('/', function(req, res) {
 router.delete('/', function(req, res) {
     req.datastore.deleteOnePoll(req.query.id)
         .then(response => {
-            if (response.ok !== 1) {
+            console.log(response.result.ok);
+            if (response.result.ok !== 1) {
                 res.sendStatus(500);
             } else {
                 res.sendStatus(200)
