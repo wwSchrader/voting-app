@@ -78,6 +78,24 @@ function getPollDetail(key) {
   })
 }
 
+function deleteOnePoll(key) {
+  return new Promise(function (resolve, reject) {
+    try {
+      //delete poll based on id number
+      collection.deleteOne({"_id": ObjectId(key)})
+        .then(function (result) {
+          if(result.result.ok !== 1) {
+            reject(result);
+          }
+          resolve(result);
+        })
+    } catch (ex) {
+      console.log(ex);
+      reject(new DatastoreUnknownExceptionGetAll(ex));
+    }
+  })
+}
+
 // Serializes an object to JSON and stores it to the database
 function set(key, value) {
   return new Promise(function (resolve, reject) {
@@ -228,6 +246,7 @@ var asyncDatastore = {
   get: get,
   getAllNames: getAllNames,
   getPollDetail: getPollDetail,
+  deleteOnePoll: deleteOnePoll,
   remove: remove,
   removeMany: removeMany,
   connect: connect

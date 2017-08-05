@@ -8,10 +8,25 @@ class VotingPage extends Component {
         super(props);
 
         this.pollId = this.props.match.params.id;
+        this.deletePoll = this.deletePoll.bind(this);
     }
 
     componentDidMount() {
         this.props.fetchData(this.pollId);
+    }
+
+    deletePoll() {
+        fetch("/api/deletepoll/?id=" + this.pollId, {method: 'delete'})
+            .then((response) => {
+                if (!response.ok) {
+                    throw Error(response.statusText);
+                }
+                this.props.history.push('/');
+            })
+            .catch((e) => {
+                console.log(e);
+            }
+        );
     }
 
     render(){
@@ -40,7 +55,7 @@ class VotingPage extends Component {
                     <Button type="submit" bsStyle="primary">
                         Vote
                     </Button>
-                    <Button bsStyle="danger">
+                    <Button bsStyle="danger" onClick={() => this.deletePoll()}>
                         Delete Poll
                     </Button>
                 </form>
