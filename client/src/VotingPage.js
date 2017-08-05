@@ -30,13 +30,20 @@ class VotingPage extends Component {
     }
 
     render(){
-        console.log(this.props);
+        console.log(this.props.singlePoll);
         var options = [];
+        var results = [];
         if (typeof this.props.singlePoll.voteOptions !== 'undefined') {
             options = this.props.singlePoll.voteOptions.map((option) => {
-                return (<Radio name="optionRadioGroup" key={option}>{option}</Radio>);
+                return (<Radio name="optionRadioGroup" key={option.optionName}>{option.optionName}</Radio>);
+            });
+
+             results = this.props.singlePoll.voteOptions.map((option) => {
+                return (<h4 key={"results" + option.optionName}>{option.optionName}: {option.optionVotes} </h4>)
             });
         }
+
+
 
         return(
             <div>
@@ -59,6 +66,8 @@ class VotingPage extends Component {
                         Delete Poll
                     </Button>
                 </form>
+
+                {results}
             </div>
         );
     }

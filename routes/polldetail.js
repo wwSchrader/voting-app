@@ -4,6 +4,7 @@ var router = express.Router();
 router.get('/', function(req, res) {
     req.datastore.getPollDetail(req.query.id)
         .then(response => {
+            console.log(response[0]);
             res.send(JSON.stringify(response[0]));
         })
         .catch((e) => {

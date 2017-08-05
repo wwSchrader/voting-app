@@ -31,6 +31,7 @@ export function votesFetchDataSuccess(items) {
 }
 
 export function singlePollFetchDataSuccess(items) {
+    console.log(items);
     return {
         type: 'SINGLE_POLL_FETCH_DATA_SUCCESS',
         items
