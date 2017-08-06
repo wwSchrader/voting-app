@@ -49,6 +49,29 @@ function addVoteToOption(pollId, optionIndex) {
   });
 }
 
+function addOptionAndVote(pollId, newOptionName) {
+  return new Promise(function (resolve, reject) {
+    try {
+      //push new vote option and give it a vote
+      collection.updateOne({"_id": ObjectId(pollId)},
+        { $push:
+          { "voteOptions":
+            {"optionName": newOptionName, "optionVotes": 1}
+          }
+        })
+        .then(function (result) {
+          if (result.result.ok !== 1) {
+            reject(new DatastoreUnknownExceptionGetAll(result))
+          } else {
+            resolve(result);
+          }
+        });
+    } catch (ex) {
+      reject(new DatastoreUnknownExceptionGetAll(ex))
+    }
+  });
+}
+
 function getAllNames() {
   return new Promise(function (resolve, reject) {
     try {
@@ -268,7 +291,8 @@ var asyncDatastore = {
   getAllNames: getAllNames,
   getPollDetail: getPollDetail,
   deleteOnePoll: deleteOnePoll,
-  addVoteToOption, addVoteToOption,
+  addVoteToOption: addVoteToOption,
+  addOptionAndVote: addOptionAndVote,
   remove: remove,
   removeMany: removeMany,
   connect: connect

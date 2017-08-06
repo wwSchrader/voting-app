@@ -43,6 +43,6 @@ router.put('/', function(req, res) {
             res.sendStatus(500)
             console.log(e);
         });
-})
+});
 
 module.exports = router;

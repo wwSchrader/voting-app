@@ -21,23 +21,27 @@ class VotingPage extends Component {
 
     handleFormSubmit(e) {
         if (this.state.selectedRadioButton !== null) {
+            let queryString = '';
             if (this.state.selectedRadioButton < 0) {
-                //handle adding option here
+                //handle adding option and voting
+                queryString = "/api/addoptionandvote/?id=" + this.pollId + "&votename=" + this.state.newOptionText;
             } else {
                 //submit vote to server
-                fetch("/api/submitvote/?id=" + this.pollId + "&vote=" + this.state.selectedRadioButton, {method: 'put'})
-                    .then((response) => {
-                        if (!response.ok) {
-                            throw Error(response.statusText);
-                        }
-                    })
-                    .then((response) => {
-                        this.props.fetchData(this.pollId);
-                    })
-                    .catch((e) => {
-                        console.log(e);
-                    });
+               queryString = "/api/submitvote/?id=" + this.pollId + "&vote=" + this.state.selectedRadioButton;
             }
+
+            fetch(queryString, {method: 'put'})
+                .then((response) => {
+                    if (!response.ok) {
+                        throw Error(response.statusText);
+                    }
+                })
+                .then((response) => {
+                    this.props.fetchData(this.pollId);
+                })
+                .catch((e) => {
+                    console.log(e);
+                });
         }
         e.preventDefault();
     }
@@ -91,8 +95,8 @@ class VotingPage extends Component {
                 );
             });
 
-             results = this.props.singlePoll.voteOptions.map((option) => {
-                return (<h4 key={"results" + option.optionName}>{option.optionName}: {option.optionVotes} </h4>)
+             results = this.props.singlePoll.voteOptions.map((option, index) => {
+                return (<h4 key={index + "results" + option.optionName}>{option.optionName}: {option.optionVotes} </h4>)
             });
         }
 

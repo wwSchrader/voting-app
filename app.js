@@ -14,6 +14,7 @@ var getVotes = require('./routes/polls');
 var getPollDetail = require('./routes/polldetail');
 var deleteSinglePoll = require('./routes/polldetail');
 var submitVote = require('./routes/polldetail');
+var addOptionandSubmitVote = require('./routes/addoption');
 
 var app = express();
 
@@ -45,6 +46,7 @@ app.use('/api/getvotes', getVotes);
 app.use('/api/getpoll/*', getPollDetail);
 app.use('/api/deletepoll/*', deleteSinglePoll);
 app.use('/api/submitvote/*', submitVote);
+app.use('/api/addoptionandvote/*', addOptionandSubmitVote)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
