@@ -30,4 +30,10 @@ router.delete('/', function(req, res) {
         });
 });
 
+router.put('/', function(req, res) {
+    console.log("Update Vote triggered");
+    console.log(req.query);
+    res.sendStatus(200);
+})
+
 module.exports = router;

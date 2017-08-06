@@ -16,6 +16,27 @@ class VotingPage extends Component {
         this.deletePoll = this.deletePoll.bind(this);
         this.handleOnRadioChange = this.handleOnRadioChange.bind(this);
         this.handleNewOptionTextChange = this.handleNewOptionTextChange.bind(this);
+        this.handleFormSubmit = this.handleFormSubmit.bind(this);
+    }
+
+    handleFormSubmit() {
+        if (this.state.selectedRadioButton !== null) {
+            if (this.state.selectedRadioButton < 0) {
+                //handle adding option here
+            } else {
+                //submit vote to server
+                fetch("/api/submitvote/?id=" + this.pollId + "&vote=" + this.state.selectedRadioButton, {method: 'put'})
+                    .then((response) => {
+                        if (!response.ok) {
+                            throw Error(response.statusText);
+                        }
+                        console.log("vote submitted!");
+                    })
+                    .catch((e) => {
+                        console.log(e);
+                    });
+            }
+        }
     }
 
     componentDidMount() {
@@ -75,7 +96,7 @@ class VotingPage extends Component {
         return(
             <div>
                 <h3>Vote: {this.props.singlePoll.voteName}</h3>
-                <form>
+                <form onSubmit={this.handleFormSubmit}>
                     <FormGroup>
                         <ControlLabel>Vote for an option:</ControlLabel>
                         {options}
