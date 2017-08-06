@@ -19,7 +19,7 @@ class VotingPage extends Component {
         this.handleFormSubmit = this.handleFormSubmit.bind(this);
     }
 
-    handleFormSubmit() {
+    handleFormSubmit(e) {
         if (this.state.selectedRadioButton !== null) {
             if (this.state.selectedRadioButton < 0) {
                 //handle adding option here
@@ -30,13 +30,16 @@ class VotingPage extends Component {
                         if (!response.ok) {
                             throw Error(response.statusText);
                         }
-                        console.log("vote submitted!");
+                    })
+                    .then((response) => {
+                        this.props.fetchData(this.pollId);
                     })
                     .catch((e) => {
                         console.log(e);
                     });
             }
         }
+        e.preventDefault();
     }
 
     componentDidMount() {

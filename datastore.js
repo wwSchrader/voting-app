@@ -28,6 +28,27 @@ function insert(value) {
   });
 }
 
+function addVoteToOption(pollId, optionIndex) {
+  return new Promise(function (resolve, reject) {
+    try {
+      //create dot notation for accessing a nested array element
+      var update = {"$inc": {} };
+      update["$inc"]["voteOptions." + optionIndex + ".optionVotes"] = 1;
+      //update the chosen voteOption votes by increasing by 1
+      collection.updateOne({"_id": ObjectId(pollId)}, update)
+        .then(function (result) {
+          if (result.result.ok !== 1) {
+            reject(new DatastoreUnknownExceptionGetAll(result))
+          } else {
+            resolve(result);
+          }
+        });
+    } catch (ex) {
+      reject(new DatastoreUnknownExceptionGetAll(ex))
+    }
+  });
+}
+
 function getAllNames() {
   return new Promise(function (resolve, reject) {
     try {
@@ -247,6 +268,7 @@ var asyncDatastore = {
   getAllNames: getAllNames,
   getPollDetail: getPollDetail,
   deleteOnePoll: deleteOnePoll,
+  addVoteToOption, addVoteToOption,
   remove: remove,
   removeMany: removeMany,
   connect: connect

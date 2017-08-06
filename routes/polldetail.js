@@ -31,9 +31,18 @@ router.delete('/', function(req, res) {
 });
 
 router.put('/', function(req, res) {
-    console.log("Update Vote triggered");
-    console.log(req.query);
-    res.sendStatus(200);
+    req.datastore.addVoteToOption(req.query.id, req.query.vote)
+        .then(response => {
+            if (response.result.ok !== 1) {
+                res.sendStatus(500);
+            } else {
+                res.sendStatus(200)
+            }
+        })
+        .catch((e) => {
+            res.sendStatus(500)
+            console.log(e);
+        });
 })
 
 module.exports = router;
