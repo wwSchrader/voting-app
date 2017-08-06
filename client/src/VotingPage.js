@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { votesFetchSinglePoll } from './actions';
 import { FormGroup, Radio, ControlLabel, Button, InputGroup, FormControl } from 'react-bootstrap';
+import {Pie} from 'react-chartjs-2';
 
 class VotingPage extends Component {
     constructor(props) {
@@ -82,8 +83,14 @@ class VotingPage extends Component {
     render(){
         var options = [];
         var results = [];
+        var chartLabels= [];
+        var chartVotes = [];
         if (typeof this.props.singlePoll.voteOptions !== 'undefined') {
             options = this.props.singlePoll.voteOptions.map((option, index) => {
+                //push option name and votes onto array for chart
+                chartLabels.push(option.optionName);
+                chartVotes.push(option.optionVotes);
+
                 return (
                     <Radio
                         name="optionRadioGroup"
@@ -99,6 +106,33 @@ class VotingPage extends Component {
                 return (<h4 key={index + "results" + option.optionName}>{option.optionName}: {option.optionVotes} </h4>)
             });
         }
+
+        var chartData = {
+            labels: chartLabels,
+            datasets: [{
+                data: chartVotes,
+                backgroundColor: [
+                '#FF6384',
+                '#36A2EB',
+                '#FFCE56',
+                '#2ecc71',
+                '#e74c3c',
+                '#8e44ad',
+                '#f1c40f',
+                '#1abc9c'
+                ],
+                hoverBackgroundColor: [
+                '#FF6384',
+                '#36A2EB',
+                '#FFCE56',
+                '#2ecc71',
+                '#e74c3c',
+                '#8e44ad',
+                '#f1c40f',
+                '#1abc9c'
+                ]
+            }]
+        };
 
         return(
             <div>
@@ -131,7 +165,7 @@ class VotingPage extends Component {
                         Delete Poll
                     </Button>
                 </form>
-
+                <Pie data={chartData} />
                 {results}
             </div>
         );
