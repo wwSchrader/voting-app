@@ -82,7 +82,6 @@ class VotingPage extends Component {
 
     render(){
         var options = [];
-        var results = [];
         var chartLabels= [];
         var chartVotes = [];
         if (typeof this.props.singlePoll.voteOptions !== 'undefined') {
@@ -100,10 +99,6 @@ class VotingPage extends Component {
                         checked={this.state.selectedRadioButton === index}
                         >{option.optionName}</Radio>
                 );
-            });
-
-             results = this.props.singlePoll.voteOptions.map((option, index) => {
-                return (<h4 key={index + "results" + option.optionName}>{option.optionName}: {option.optionVotes} </h4>)
             });
         }
 
@@ -166,7 +161,6 @@ class VotingPage extends Component {
                     </Button>
                 </form>
                 <Pie data={chartData} />
-                {results}
             </div>
         );
     }
