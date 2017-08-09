@@ -7,21 +7,19 @@ module.exports = function(passport) {
     passport.authenticate('local', { failWithError: true, flashFailure: true }),
     function(req, res) {
       // handle success
-      return res.send("Logged In!");
+      return res.json({isLoggedIn: true});
     },
     function(err, req, res, next) {
       // handle error
+      console.log("failed auth");
+      console.log(err);
       return res.status(401).send(req.flash('authMessage')[0]);
     }
   );
 
-  router.get('/login', function (req, res) {
-    res.send(req.flash);
-  })
-
   router.get('/logout', function(req, res) {
     req.logout();
-    res.send("Logged Out");
+    res.json({isLoggedIn: false});
   });
 
     router.post('/register', (req, res, next) => {
@@ -51,7 +49,7 @@ module.exports = function(passport) {
                               console.log(err)
                               return res.sendStatus(500);
                             } else {
-                              return res.status(200).send("Logged In!");
+                              return res.status(200).send("LOGGED_IN");
                             }
                           });
                         }

@@ -23,7 +23,6 @@ export function votesIsLoading(bool) {
 }
 
 export function votesFetchDataSuccess(items) {
-    console.log(items);
     return {
         type: 'VOTE_POST_DATA_SUCCESS',
         items
@@ -31,10 +30,17 @@ export function votesFetchDataSuccess(items) {
 }
 
 export function singlePollFetchDataSuccess(items) {
-    console.log(items);
     return {
         type: 'SINGLE_POLL_FETCH_DATA_SUCCESS',
         items
+    };
+}
+
+export function isLoggedIn(bool){
+    console.log(bool);
+    return {
+        type: 'USER_IS_LOGGED_IN',
+        isLoggedIn: bool
     };
 }
 

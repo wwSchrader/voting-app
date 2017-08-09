@@ -129,6 +129,27 @@ class VotingPage extends Component {
             }]
         };
 
+        let createNewOption = null;
+        if (this.props.userIsSignedIn) {
+            createNewOption =
+                <InputGroup>
+                    <InputGroup.Addon>
+                        <input
+                            type="radio"
+                            name="optionRadioGroup"
+                            value="-1"
+                            onChange={this.handleOnRadioChange}
+                            checked={this.state.selectedRadioButton === -1}
+                            />
+                    </InputGroup.Addon>
+                    <FormControl
+                        type="text"
+                        placeholder="Enter a new option"
+                        value={this.state.newOptionText}
+                        onChange={this.handleNewOptionTextChange}/>
+                </InputGroup>;
+        }
+
         return(
             <div>
                 <h3>Vote: {this.props.singlePoll.voteName}</h3>
@@ -136,22 +157,7 @@ class VotingPage extends Component {
                     <FormGroup>
                         <ControlLabel>Vote for an option:</ControlLabel>
                         {options}
-                        <InputGroup>
-                            <InputGroup.Addon>
-                                <input
-                                    type="radio"
-                                    name="optionRadioGroup"
-                                    value="-1"
-                                    onChange={this.handleOnRadioChange}
-                                    checked={this.state.selectedRadioButton === -1}
-                                    />
-                            </InputGroup.Addon>
-                            <FormControl
-                                type="text"
-                                placeholder="Enter a new option"
-                                value={this.state.newOptionText}
-                                onChange={this.handleNewOptionTextChange}/>
-                        </InputGroup>
+                        {createNewOption}
                     </FormGroup>
                     <Button type="submit" bsStyle="primary">
                         Vote
@@ -170,7 +176,8 @@ const mapStateToProps = (state) => {
     return {
         singlePoll: state.singlePoll,
         hasErrored: state.voteHasErrored,
-        isLoading: state.votesIsLoading
+        isLoading: state.votesIsLoading,
+        userIsSignedIn: state.userIsSignedIn
     };
 };
 

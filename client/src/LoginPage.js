@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { Form, FormGroup, FormControl, Col, Button, ControlLabel } from 'react-bootstrap';
+import { connect } from 'react-redux';
+import { isLoggedIn } from './actions/index';
 
 class LoginPage extends Component {
     constructor(props) {
@@ -40,8 +42,13 @@ class LoginPage extends Component {
                 password: this.state.password
             })
         })
+        .then(resp => {
+            console.log(resp);
+            return resp.json();
+        })
         .then((response) => {
-            console.log(response);
+            console.log(response.isLoggedIn);
+            return this.props.determineLogIn(response.isLoggedIn);
         });
 
         e.preventDefault();
@@ -84,4 +91,11 @@ class LoginPage extends Component {
 
 }
 
-export default LoginPage;
+const mapDispatchToProps = (dispatch) => {
+    console.log(isLoggedIn);
+    return {
+        determineLogIn: (bool) => dispatch(isLoggedIn(bool))
+    };
+};
+
+export default connect(null, mapDispatchToProps) (LoginPage);
