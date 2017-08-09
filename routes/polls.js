@@ -1,8 +1,9 @@
 var express = require('express');
 var router = express.Router();
+var { ensureAuthenticated } = require('../library.js');
 
 
-router.post('/', function(req, res) {
+router.post('/', ensureAuthenticated, function(req, res) {
     let newPoll = Object.assign({}, req.body);
 
     //convert option name array into an array of objects with name and vote attributes

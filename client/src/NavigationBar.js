@@ -3,6 +3,22 @@ import { Navbar, Nav, NavItem } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 
 class NavigationBar extends Component {
+  constructor(props) {
+    super(props);
+    this.onLogOut = this.onLogOut.bind(this);
+  }
+
+  onLogOut(e) {
+    e.preventDefault();
+
+    fetch('/api/auth/logout', {
+            method: 'get',
+            credentials: 'include'
+        })
+        .then((response) => {
+            console.log(response);
+        });
+  }
   render() {
     return (
         <Navbar collapseOnSelect fluid>
@@ -18,6 +34,8 @@ class NavigationBar extends Component {
               <NavItem>My Polls</NavItem>
               <LinkContainer to="/newpoll"><NavItem>New Poll</NavItem></LinkContainer>
               <NavItem>Account</NavItem>
+              <LinkContainer to="/login"><NavItem>Login</NavItem></LinkContainer>
+              <LinkContainer to="/"><NavItem onClick={this.onLogOut}>Logout</NavItem></LinkContainer>
             </Nav>
           </Navbar.Collapse>
         </Navbar>

@@ -6,9 +6,13 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var datastore = require("./datastore").async;
+var passport = require('passport');
+var session = require('express-session');
+var LocalStrategy = require('passport-local').Strategy;
+var flash = require('connect-flash');
 
 var index = require('./routes/index');
-var users = require('./routes/users');
+var users = require('./routes/users')(passport);
 var addVote = require('./routes/polls');
 var getVotes = require('./routes/polls');
 var getPollDetail = require('./routes/polldetail');
@@ -18,9 +22,62 @@ var addOptionandSubmitVote = require('./routes/addoption');
 
 var app = express();
 
-// setup our datastore
 
-datastore.connect();
+
+app.use(logger('dev'));
+app.use(cookieParser(process.env.SESSION_SECRET));
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+app.use(express.static(path.join(__dirname, 'client/build')));
+app.use(flash());
+app.use(session({
+  secret: process.env.SESSION_SECRET,
+  resave: true,
+  saveUninitialized: true
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+
+// setup our datastore
+datastore.connect('userCollection');
+
+datastore.connect('pollCollection');
+
+passport.use(new LocalStrategy(
+  {passReqToCallback: true},
+  function(req, username, password, done) {
+    datastore.findUser(username)
+      .then(response => {
+      if (response === null || username !== response.username) {
+        return done(null, false, req.flash( 'authMessage', 'Incorrect username'));
+      }
+      if (password !== response.password) {
+        return done(null, false, req.flash( 'authMessage', 'Incorrect password'));
+      }
+      console.log("credentials match");
+      return done(null, response);
+      })
+      .catch(ex => {
+        return done(ex);
+      });
+  }
+));
+
+passport.serializeUser(function(user, done) {
+  done(null, user._id);
+});
+
+passport.deserializeUser(function(id, done) {
+  datastore.findUserById(id)
+    .then(response => {
+      return done(null, response);
+    })
+    .catch(ex => {
+      done(ex);
+    });
+});
+
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -31,13 +88,15 @@ app.all('*', function(request,response, next) {
     next();
 });
 
+app.all('*', function(request,response, next) {
+    request.passport = passport;
+    next();
+});
+
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
-app.use(logger('dev'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'client/build')));
+
+
 
 app.use('/', index);
 app.use('/users', users);
@@ -46,10 +105,12 @@ app.use('/api/getvotes', getVotes);
 app.use('/api/getpoll/*', getPollDetail);
 app.use('/api/deletepoll/*', deleteSinglePoll);
 app.use('/api/submitvote/*', submitVote);
-app.use('/api/addoptionandvote/*', addOptionandSubmitVote)
+app.use('/api/addoptionandvote/*', addOptionandSubmitVote);
+app.use('/api/auth', users);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
+  console.log("404 error message");
   var err = new Error('Not Found');
   err.status = 404;
   next(err);

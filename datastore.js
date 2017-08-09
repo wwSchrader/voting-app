@@ -5,17 +5,69 @@ var ObjectId = require('mongodb').ObjectID;
 // Standard URI format: mongodb://[dbuser:dbpassword@]host:port/dbname, details set in .env
 var MONGODB_URI = process.env.MONGODB_URI;
 
-var collection;
+var pollCollection;
+var userCollection;
+var sessionsCollection;
 
 // ------------------------------
 // ASYNCHRONOUS PROMISE-BASED API
 // ------------------------------
 
+function findUserById(userId) {
+  return new Promise(function (resolve, reject) {
+    try {
+      userCollection.findOne({"_id": ObjectId(userId)}, (err, data) => {
+        if (err) {
+          console.log(err);
+          reject(err);
+        } else {
+          resolve(data);
+        }
+      });
+    } catch (ex) {
+      reject(new DatastoreUnknownExceptionGetAll(ex));
+    }
+  });
+}
+
+
+function findUser(userName) {
+  return new Promise(function (resolve, reject) {
+    try {
+      userCollection.findOne({"username": userName}, (err, data) => {
+        if (err) {
+          console.log(err);
+          reject(err);
+        } else {
+          resolve(data);
+        }
+      });
+    } catch (ex) {
+      reject(new DatastoreUnknownExceptionGetAll(ex));
+    }
+  });
+}
+
+function addUser(userBody) {
+  return new Promise(function (resolve, reject) {
+    try {
+      userCollection.insertOne(userBody , function (err, res) {
+        if (err) {
+          reject(new DatastoreUnderlyingException(userBody, err));
+        } else {
+          resolve(res);
+        }
+      });
+    } catch (ex) {
+      reject(new DatastoreValueSerializationException(userBody, ex));
+    }
+  });
+}
+
 function insert(value) {
   return new Promise(function (resolve, reject) {
     try {
-      var serializedValue = JSON.stringify(value);
-      collection.insertOne(value, function (err, res) {
+      pollCollection.insertOne(value, function (err, res) {
         if (err) {
           reject(new DatastoreUnderlyingException(value, err));
         } else {
@@ -35,7 +87,7 @@ function addVoteToOption(pollId, optionIndex) {
       var update = {"$inc": {} };
       update["$inc"]["voteOptions." + optionIndex + ".optionVotes"] = 1;
       //update the chosen voteOption votes by increasing by 1
-      collection.updateOne({"_id": ObjectId(pollId)}, update)
+      pollCollection.updateOne({"_id": ObjectId(pollId)}, update)
         .then(function (result) {
           if (result.result.ok !== 1) {
             reject(new DatastoreUnknownExceptionGetAll(result))
@@ -53,7 +105,7 @@ function addOptionAndVote(pollId, newOptionName) {
   return new Promise(function (resolve, reject) {
     try {
       //push new vote option and give it a vote
-      collection.updateOne({"_id": ObjectId(pollId)},
+      pollCollection.updateOne({"_id": ObjectId(pollId)},
         { $push:
           { "voteOptions":
             {"optionName": newOptionName, "optionVotes": 1}
@@ -76,7 +128,7 @@ function getAllNames() {
   return new Promise(function (resolve, reject) {
     try {
       //return just the ids and vote names
-      collection.find({}, {voteName: 1 }).toArray(function (err, arrays) {
+      pollCollection.find({}, {voteName: 1 }).toArray(function (err, arrays) {
         if (err) {
           reject(new DatastoreUnderlyingExceptionGetAll(err));
         } try {
@@ -100,7 +152,7 @@ function getPollDetail(key) {
   return new Promise(function (resolve, reject) {
     try {
       //return just the ids and vote names
-      collection.find(ObjectId(key)).toArray(function (err, arrays) {
+      pollCollection.find(ObjectId(key)).toArray(function (err, arrays) {
         if (err) {
           reject(new DatastoreUnderlyingExceptionGetAll(err));
         } try {
@@ -126,7 +178,7 @@ function deleteOnePoll(key) {
   return new Promise(function (resolve, reject) {
     try {
       //delete poll based on id number
-      collection.deleteOne({"_id": ObjectId(key)})
+      pollCollection.deleteOne({"_id": ObjectId(key)})
         .then(function (result) {
           if(result.result.ok !== 1) {
             reject(result);
@@ -148,7 +200,7 @@ function set(key, value) {
     } else {
       try {
         var serializedValue = JSON.stringify(value);
-        collection.updateOne({"key": key}, {$set: {"value": serializedValue}}, {upsert:true}, function (err, res) {
+        pollCollection.updateOne({"key": key}, {$set: {"value": serializedValue}}, {upsert:true}, function (err, res) {
           if (err) {
             reject(new DatastoreUnderlyingException(value, err));
           } else {
@@ -170,7 +222,7 @@ function get(key) {
       if (typeof(key) !== "string") {
         reject(new DatastoreKeyNeedToBeStringException(key));
       } else {
-        collection.findOne({"key":key}, function (err, data) {
+        pollCollection.findOne({"key":key}, function (err, data) {
           if (err) {
             reject(new DatastoreUnderlyingException(key, err));
           } else {
@@ -199,7 +251,7 @@ function remove(key) {
       if (typeof(key) !== "string") {
         reject(new DatastoreKeyNeedToBeStringException(key));
       } else {
-        collection.deleteOne({"key": key}, function (err, res) {
+        pollCollection.deleteOne({"key": key}, function (err, res) {
           if (err) {
             reject(new DatastoreUnderlyingException(key, err));
           } else {
@@ -219,7 +271,7 @@ function removeMany(keys) {
   }));
 }
 
-function connect() {
+function connect(collectionType) {
   return new Promise(function (resolve, reject) {
     try {
       mongodb.MongoClient.connect(MONGODB_URI, function(err, db) {
@@ -227,8 +279,18 @@ function connect() {
           console.log(err);
           reject(err);
         }
-        collection = db.collection(process.env.COLLECTION);
-        resolve(collection);
+
+        if (collectionType === 'pollCollection') {
+          pollCollection = db.collection(collectionType);
+          resolve(pollCollection);
+        } else if (collectionType === 'userCollection') {
+          userCollection = db.collection(collectionType);
+          resolve(userCollection);
+        } else if (collectionType === 'sessionsCollection') {
+          userCollection = db.collection(collectionType);
+          resolve(userCollection);
+        }
+
       });
     } catch(ex) {
       console.log(ex);
@@ -285,6 +347,9 @@ function DatastoreUnknownExceptionGetAll(ex) {
 }
 
 var asyncDatastore = {
+  findUserById: findUserById,
+  findUser: findUser,
+  addUser: addUser,
   insert: insert,
   set: set,
   get: get,

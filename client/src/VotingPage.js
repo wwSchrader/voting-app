@@ -31,7 +31,7 @@ class VotingPage extends Component {
                queryString = "/api/submitvote/?id=" + this.pollId + "&vote=" + this.state.selectedRadioButton;
             }
 
-            fetch(queryString, {method: 'put'})
+            fetch(queryString, {method: 'put', credentials: 'include'})
                 .then((response) => {
                     if (!response.ok) {
                         throw Error(response.statusText);
@@ -67,7 +67,7 @@ class VotingPage extends Component {
     }
 
     deletePoll() {
-        fetch("/api/deletepoll/?id=" + this.pollId, {method: 'delete'})
+        fetch("/api/deletepoll/?id=" + this.pollId, {method: 'delete', credentials: 'include'})
             .then((response) => {
                 if (!response.ok) {
                     throw Error(response.statusText);

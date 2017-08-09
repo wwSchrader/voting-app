@@ -1,10 +1,10 @@
 var express = require('express');
 var router = express.Router();
+var { ensureAuthenticated } = require('../library.js');
 
 router.get('/', function(req, res) {
     req.datastore.getPollDetail(req.query.id)
         .then(response => {
-            console.log(response[0]);
             res.send(JSON.stringify(response[0]));
         })
         .catch((e) => {
@@ -14,10 +14,9 @@ router.get('/', function(req, res) {
 
 });
 
-router.delete('/', function(req, res) {
+router.delete('/', ensureAuthenticated, function(req, res) {
     req.datastore.deleteOnePoll(req.query.id)
         .then(response => {
-            console.log(response.result.ok);
             if (response.result.ok !== 1) {
                 res.sendStatus(500);
             } else {
