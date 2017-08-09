@@ -34,7 +34,8 @@ class NewVotePage extends Component {
         let postData = {
             method: 'POST',
             body: JSON.stringify(newVote),
-            headers: myHeaders
+            headers: myHeaders,
+            credentials: 'include'
         }
 
         //add vote and then changes url to voting page
