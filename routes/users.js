@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var bcrypt = require('bcrypt');
 
 module.exports = function(passport) {
   router.post('/login',
@@ -29,30 +30,39 @@ module.exports = function(passport) {
             if (response !== null) {
               res.status(400).send("Already registered");
             } else {
-              req.datastore.addUser(req.body)
-                .then(response => {})
-                .catch (ex => {
-                  res.sendStatus(500);
-                });
+              //convert password to hash and add it to the database
+              bcrypt.hash(req.body.password, 13).
+                then(hash => {
+                  req.datastore.addUser({
+                    username: req.body.username,
+                    bcryptHash: hash
+                  })
+                    .then(() => {
+                      passport.authenticate('local', (err, user, info) => {
+                        if (err || !user) {
+                          res.sendStatus(500);
+                          console.log(err);
+                          console.log(info);
+                          console.log(user);
+                        } else {
+                          req.login(user, err => {
+                            if (err) {
+                              console.log("login error");
+                              console.log(err)
+                              return res.sendStatus(500);
+                            } else {
+                              return res.status(200).send("Logged In!");
+                            }
+                          });
+                        }
+                      })(req, res);
+                    })
+                    .catch (ex => {
+                      console.log("add user error");
+                      res.sendStatus(500);
+                    });
+                })
             }
-          })
-          .then(() => {
-            passport.authenticate('local', (err, user, info) => {
-              if (err || !user) {
-                res.sendStatus(500);
-                console.log(err);
-                console.log(info);
-              } else {
-                req.login(user, err => {
-                  if (err) {
-                    console.log(err)
-                    return res.sendStatus(500);
-                  } else {
-                    return res.status(200).send("Logged In!");
-                  }
-                });
-              }
-            })(req, res);
           })
           .catch((ex) => {
             console.log("finduser threw error" + ex);

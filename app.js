@@ -10,6 +10,7 @@ var passport = require('passport');
 var session = require('express-session');
 var LocalStrategy = require('passport-local').Strategy;
 var flash = require('connect-flash');
+var bcrypt = require('bcrypt');
 
 var index = require('./routes/index');
 var users = require('./routes/users')(passport);
@@ -48,14 +49,19 @@ passport.use(new LocalStrategy(
   function(req, username, password, done) {
     datastore.findUser(username)
       .then(response => {
-      if (response === null || username !== response.username) {
-        return done(null, false, req.flash( 'authMessage', 'Incorrect username'));
-      }
-      if (password !== response.password) {
-        return done(null, false, req.flash( 'authMessage', 'Incorrect password'));
-      }
-      console.log("credentials match");
-      return done(null, response);
+        if (response === null || username !== response.username) {
+          return done(null, false, req.flash( 'authMessage', 'Incorrect username'));
+        }
+
+        bcrypt.compare(password, response.bcryptHash)
+          .then(pswdMatch => {
+            if (!pswdMatch) {
+              return done(null, false, req.flash( 'authMessage', 'Incorrect password'));
+            } else {
+              console.log("credentials match");
+              return done(null, response);
+            }
+          })
       })
       .catch(ex => {
         return done(ex);
