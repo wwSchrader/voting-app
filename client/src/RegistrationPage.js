@@ -40,9 +40,7 @@ class RegistrationPage extends Component {
                 password: this.state.password
             })
         })
-        .then((response) => {
-            console.log(response);
-        });
+        .then((response) => this.props.history.push("/login"));
 
         e.preventDefault();
     }

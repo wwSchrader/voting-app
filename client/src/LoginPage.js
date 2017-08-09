@@ -49,7 +49,8 @@ class LoginPage extends Component {
         .then((response) => {
             console.log(response.isLoggedIn);
             return this.props.determineLogIn(response.isLoggedIn);
-        });
+        })
+        .then(() => this.props.history.push("/"));
 
         e.preventDefault();
     }
