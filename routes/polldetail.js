@@ -5,7 +5,9 @@ var { ensureAuthenticated } = require('../library.js');
 router.get('/', function(req, res) {
     req.datastore.getPollDetail(req.query.id)
         .then(response => {
-            res.send(JSON.stringify(response[0]));
+            let responsePoll = response[0];
+            responsePoll.userIp = req.ip;
+            res.send(JSON.stringify(responsePoll));
         })
         .catch((e) => {
             res.sendStatus(500)
@@ -29,8 +31,9 @@ router.delete('/', ensureAuthenticated, function(req, res) {
         });
 });
 
+//submit vote
 router.put('/', function(req, res) {
-    req.datastore.addVoteToOption(req.query.id, req.query.vote)
+    req.datastore.addVoteToOption(req.query.id, req.query.vote, req.ip)
         .then(response => {
             if (response.result.ok !== 1) {
                 res.sendStatus(500);

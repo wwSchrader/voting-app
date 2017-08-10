@@ -4,7 +4,6 @@ var { ensureAuthenticated } = require('../library.js');
 
 //get list of polls created by user
 router.get('/pollsByUser/', ensureAuthenticated,  function(req, res) {
-    console.log("get filtered polls");
     req.datastore.getNamesFilterByCreator(req.user._id)
         .then(response => {
             res.send(JSON.stringify(response));

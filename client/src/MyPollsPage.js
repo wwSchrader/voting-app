@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { PageHeader } from 'react-bootstrap';
 import PollTitleButton from './PollTitleButton.js';
 import { connect } from 'react-redux';
 import { votesFetchCreatedPollsByUser } from './actions/index';

@@ -150,10 +150,11 @@ class VotingPage extends Component {
                 </InputGroup>;
         }
 
-        return(
-            <div>
-                <h3>Vote: {this.props.singlePoll.voteName}</h3>
-                <form onSubmit={this.handleFormSubmit}>
+        let voteSelectionForm = null;
+        //show voting options if ip address does not one in the list
+        if (this.props.singlePoll.voterList !== undefined) {
+            if (this.props.singlePoll.voterList.indexOf(this.props.singlePoll.userIp) === -1) {
+                voteSelectionForm = <form onSubmit={this.handleFormSubmit}>
                     <FormGroup>
                         <ControlLabel>Vote for an option:</ControlLabel>
                         {options}
@@ -162,11 +163,20 @@ class VotingPage extends Component {
                     <Button type="submit" bsStyle="primary">
                         Vote
                     </Button>
-                    <Button bsStyle="danger" onClick={() => this.deletePoll()}>
-                        Delete Poll
-                    </Button>
-                </form>
+                </form>;
+            } else {
+                voteSelectionForm = <h3>Thank you for your vote!</h3>;
+            }
+        }
+
+        return(
+            <div>
+                <h3>Vote: {this.props.singlePoll.voteName}</h3>
+                {voteSelectionForm}
                 <Pie data={chartData} />
+                <Button bsStyle="danger" onClick={() => this.deletePoll()}>
+                        Delete Poll
+                </Button>
             </div>
         );
     }

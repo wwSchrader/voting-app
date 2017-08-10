@@ -80,11 +80,11 @@ function insert(value) {
   });
 }
 
-function addVoteToOption(pollId, optionIndex) {
+function addVoteToOption(pollId, optionIndex, voterIpAddress) {
   return new Promise(function (resolve, reject) {
     try {
       //create dot notation for accessing a nested array element
-      var update = {"$inc": {} };
+      var update = {"$inc": {}, "$push": {"voterList": voterIpAddress} };
       update["$inc"]["voteOptions." + optionIndex + ".optionVotes"] = 1;
       //update the chosen voteOption votes by increasing by 1
       pollCollection.updateOne({"_id": ObjectId(pollId)}, update)
