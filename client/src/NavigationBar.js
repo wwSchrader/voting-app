@@ -40,7 +40,7 @@ class NavigationBar extends Component {
     if (this.props.userIsSignedIn) {
       loginNav =
         <LinkContainer to="/"><NavItem onClick={this.onLogOut}>Logout</NavItem></LinkContainer>;
-      myPollsNav = <NavItem>My Polls</NavItem>;
+      myPollsNav = <LinkContainer to="/mypolls"><NavItem>My Polls</NavItem></LinkContainer>;
       newPollNav = <LinkContainer to="/newpoll"><NavItem>New Poll</NavItem></LinkContainer>;
       accountNav = <NavItem>Account</NavItem>;
     } else {

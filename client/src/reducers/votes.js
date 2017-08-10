@@ -17,6 +17,7 @@ export function votesIsLoading(state = false, action) {
 export function votes(state = [], action) {
     switch (action.type) {
         case 'VOTE_POST_DATA_SUCCESS':
+        case 'POLLS_BY_USER_FETCH_DATA_SUCCESS':
             return action.items;
         default:
             return state;

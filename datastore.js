@@ -148,6 +148,30 @@ function getAllNames() {
   })
 }
 
+function getNamesFilterByCreator(userId) {
+  return new Promise(function (resolve, reject) {
+    try {
+      //return just the ids and vote names
+      pollCollection.find({creatorId: ObjectId(userId)}, {voteName: 1 }).toArray(function (err, arrays) {
+        if (err) {
+          reject(new DatastoreUnderlyingExceptionGetAll(err));
+        } try {
+          if(arrays===null){
+            resolve(null);
+          }
+          else{
+            resolve(arrays);
+          }
+        } catch (ex) {
+          reject(new DatastoreDataParsingException(arrays, ex));
+        }
+      });
+    } catch (ex) {
+      reject(new DatastoreUnknownExceptionGetAll(ex));
+    }
+  })
+}
+
 function getPollDetail(key) {
   return new Promise(function (resolve, reject) {
     try {
@@ -354,6 +378,7 @@ var asyncDatastore = {
   set: set,
   get: get,
   getAllNames: getAllNames,
+  getNamesFilterByCreator: getNamesFilterByCreator,
   getPollDetail: getPollDetail,
   deleteOnePoll: deleteOnePoll,
   addVoteToOption: addVoteToOption,

@@ -36,6 +36,13 @@ export function singlePollFetchDataSuccess(items) {
     };
 }
 
+export function votesCreatedPollsByUser(items) {
+    return {
+        type: 'POLLS_BY_USER_FETCH_DATA_SUCCESS',
+        items
+    }
+}
+
 export function isLoggedIn(bool){
     console.log(bool);
     return {
@@ -59,6 +66,28 @@ export function votesFetchData() {
             })
             .then((response) => response.json())
             .then((votes) => dispatch(votesFetchDataSuccess(votes)))
+            .catch((e) => {
+                console.log(e);
+                return dispatch(voteHasErrored(true))
+            });
+    };
+}
+
+export function votesFetchCreatedPollsByUser() {
+    return (dispatch) => {
+        dispatch (votesIsLoading(true));
+
+        fetch("/api/getvotes/pollsByUser/", {method: 'get', credentials: 'include'})
+            .then((response) => {
+                if (!response.ok) {
+                    throw Error(response.statusText);
+                }
+
+                dispatch(votesIsLoading(false));
+                return response;
+            })
+            .then((response) => response.json())
+            .then((votes) => dispatch(votesCreatedPollsByUser(votes)))
             .catch((e) => {
                 console.log(e);
                 return dispatch(voteHasErrored(true))
