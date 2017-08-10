@@ -77,7 +77,6 @@ class LoginPage extends Component {
     validatePassword(e) {
         if (this.state.loginButtonPressed) {
             if (this.state.password.length === 0) {
-                console.log("pswd error")
                 return 'error';
             } else {
                 return null;
