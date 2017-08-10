@@ -31,7 +31,7 @@ class NavigationBar extends Component {
 
 
   render() {
-    console.log(this.props.userIsSignedIn);
+    console.log(this.props.location);
     let loginNav = null;
     let myPollsNav = null;
     let newPollNav = null;
@@ -39,7 +39,7 @@ class NavigationBar extends Component {
 
     if (this.props.userIsSignedIn) {
       loginNav =
-        <LinkContainer to="/"><NavItem onClick={this.onLogOut}>Logout</NavItem></LinkContainer>;
+        <LinkContainer to="/" isActive={() => false}><NavItem onClick={this.onLogOut}>Logout</NavItem></LinkContainer>;
       myPollsNav = <LinkContainer to="/mypolls"><NavItem>My Polls</NavItem></LinkContainer>;
       newPollNav = <LinkContainer to="/newpoll"><NavItem>New Poll</NavItem></LinkContainer>;
       accountNav = <NavItem>Account</NavItem>;
@@ -58,7 +58,7 @@ class NavigationBar extends Component {
           </Navbar.Header>
           <Navbar.Collapse>
             <Nav pullRight>
-              <LinkContainer to="/"><NavItem>Home</NavItem></LinkContainer>
+              <LinkContainer to="/" exact={true}><NavItem>Home</NavItem></LinkContainer>
               {myPollsNav}
               {newPollNav}
               {accountNav}
