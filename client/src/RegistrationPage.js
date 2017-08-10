@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Form, FormGroup, FormControl, Col, Button, ControlLabel, HelpBlock } from 'react-bootstrap';
+import { Form, FormGroup, FormControl, Col, Button, ControlLabel, HelpBlock, Alert } from 'react-bootstrap';
 
 class RegistrationPage extends Component {
     constructor(props) {
@@ -8,7 +8,8 @@ class RegistrationPage extends Component {
         this.state = {
             email: '',
             password: '',
-            submitButtonPressed: false
+            submitButtonPressed: false,
+            registrationErrorMessage: null
         }
 
         this.onEmailChange = this.onEmailChange.bind(this);
@@ -48,8 +49,18 @@ class RegistrationPage extends Component {
                     password: this.state.password
                 })
             })
-            .then((response) => this.props.history.push("/login"));
-            }
+            .then((response) => {
+                if (response.ok) {
+                    return this.props.history.push("/login");
+                } else {
+                    response.json().then(errMsg => this.setState({ registrationErrorMessage: errMsg.regError}));
+                    throw new Error("Registration Error");
+                }
+            })
+            .catch(err => {
+                console.log(err.message);
+            });
+        }
     }
 
     validateEmail() {
@@ -83,8 +94,16 @@ class RegistrationPage extends Component {
     }
 
     render() {
+        let errorMessage = null;
+        if (this.state.registrationErrorMessage) {
+            errorMessage =
+                <Alert bsStyle="danger">
+                    {this.state.registrationErrorMessage}
+                </Alert>;
+        }
         return (
             <Form horizontal onSubmit={this.onFormSubmit}>
+                {errorMessage}
                 <FormGroup controlId="formEmail" validationState={this.validateEmail()}>
                     <Col componentClass={ControlLabel} sm={2}>
                         Email

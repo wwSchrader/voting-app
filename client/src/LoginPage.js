@@ -64,7 +64,7 @@ class LoginPage extends Component {
                 })
                 .then(() => this.props.history.push("/"))
                 .catch(err => {
-                    console.log("Authentication error!");
+                    console.log(err.message);
                 });
             }
         }

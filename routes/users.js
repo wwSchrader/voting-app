@@ -25,7 +25,7 @@ module.exports = function(passport) {
         req.datastore.findUser(req.body.username)
           .then(response => {
             if (response !== null) {
-              res.status(400).send("Already registered");
+              res.status(400).json({regError: "Already registered"});
             } else {
               //convert password to hash and add it to the database
               bcrypt.hash(req.body.password, 13).
