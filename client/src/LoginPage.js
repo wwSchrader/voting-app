@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Form, FormGroup, FormControl, Col, Button, ControlLabel } from 'react-bootstrap';
+import { Form, FormGroup, FormControl, Col, Button, ControlLabel, HelpBlock } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { isLoggedIn, userIdFetchSuccess } from './actions/index';
 
@@ -9,12 +9,15 @@ class LoginPage extends Component {
 
         this.state = {
             email: '',
-            password: ''
+            password: '',
+            loginButtonPressed: false
         }
 
         this.onEmailChange = this.onEmailChange.bind(this);
         this.onPasswordChange = this.onPasswordChange.bind(this);
         this.onFormSubmit = this.onFormSubmit.bind(this);
+        this.validateEmail = this.validateEmail.bind(this);
+        this.validatePassword = this.validatePassword.bind(this);
     }
 
     onEmailChange(e) {
@@ -30,50 +33,88 @@ class LoginPage extends Component {
     }
 
     onFormSubmit(e) {
-        fetch('/api/auth/login', {
-            method: 'post',
-            credentials: 'include',
-            headers: {
-                'Accept': 'application/json, text/plain, */*',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                username: this.state.email,
-                password: this.state.password
-            })
-        })
-        .then(resp => {
-            console.log(resp);
-            return resp.json();
-        })
-        .then((response) => {
-            console.log(response.isLoggedIn);
-            this.props.addUserId(response.userId);
-            return this.props.determineLogIn(response.isLoggedIn);
-        })
-        .then(() => this.props.history.push("/"));
-
         e.preventDefault();
+        this.setState({loginButtonPressed: true});
+
+        if (this.state.email.length !== 0) {
+            if (this.state.password.length !== 0) {
+                fetch('/api/auth/login', {
+                    method: 'post',
+                    credentials: 'include',
+                    headers: {
+                        'Accept': 'application/json, text/plain, */*',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        username: this.state.email,
+                        password: this.state.password
+                    })
+                })
+                .then(resp => {
+                    return resp.json();
+                })
+                .then((response) => {
+                    this.props.addUserId(response.userId);
+                    return this.props.determineLogIn(response.isLoggedIn);
+                })
+                .then(() => this.props.history.push("/"));
+            }
+        }
+    }
+
+    validateEmail(e) {
+        if (this.state.loginButtonPressed) {
+            if (this.state.email.length === 0) {
+                return 'error';
+            } else {
+                return null;
+            }
+        } else {
+            return null;
+        }
+    }
+
+    validatePassword(e) {
+        if (this.state.loginButtonPressed) {
+            if (this.state.password.length === 0) {
+                console.log("pswd error")
+                return 'error';
+            } else {
+                return null;
+            }
+        } else {
+            return null;
+        }
+    }
+
+    renderHelpBock(validationStatus) {
+        if (validationStatus === 'error') {
+            return (<HelpBlock>Can't Be Empty!</HelpBlock>);
+        }
     }
 
     render() {
         return (
             <Form horizontal onSubmit={this.onFormSubmit}>
-                <FormGroup controlId="formEmail">
+                <FormGroup controlId="formEmail" validationState={this.validateEmail()}>
                     <Col componentClass={ControlLabel} sm={2}>
                         Email
                     </Col>
                     <Col sm={10}>
-                        <FormControl type="email" placeholder="Email" onChange={this.onEmailChange}/>
+                        <FormControl type="email" placeholder="Email" onChange={this.onEmailChange} value={this.state.email} />
                     </Col>
+                    {this.renderHelpBock(this.validateEmail())}
+                    <FormControl.Feedback />
                 </FormGroup>
-                <FormGroup controlId="formPassword">
+                <FormGroup controlId="formPassword"  validationState={this.validatePassword()}>
                     <Col componentClass={ControlLabel} sm={2}>
                         Password
                     </Col>
                     <Col sm={10}>
-                        <FormControl type="password" placeholder="Password" onChange={this.onPasswordChange}/>
+                        <FormControl type="password" placeholder="Password" onChange={this.onPasswordChange} value={this.state.password}/>
                     </Col>
+                    {this.renderHelpBock(this.validatePassword())}
+                    <FormControl.Feedback />
                 </FormGroup>
 
                 <FormGroup>
@@ -94,7 +135,6 @@ class LoginPage extends Component {
 }
 
 const mapDispatchToProps = (dispatch) => {
-    console.log(isLoggedIn);
     return {
         determineLogIn: (bool) => dispatch(isLoggedIn(bool)),
         addUserId: (userId) => dispatch(userIdFetchSuccess(userId))
