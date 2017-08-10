@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Form, FormGroup, FormControl, Col, Button, ControlLabel, HelpBlock } from 'react-bootstrap';
+import { Form, FormGroup, FormControl, Col, Button, ControlLabel, HelpBlock, Alert } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { isLoggedIn, userIdFetchSuccess } from './actions/index';
 
@@ -10,7 +10,8 @@ class LoginPage extends Component {
         this.state = {
             email: '',
             password: '',
-            loginButtonPressed: false
+            loginButtonPressed: false,
+            loginErrorMessage: null
         }
 
         this.onEmailChange = this.onEmailChange.bind(this);
@@ -51,13 +52,20 @@ class LoginPage extends Component {
                     })
                 })
                 .then(resp => {
+                    if(!resp.ok) {
+                        resp.json().then(err => {this.setState({loginErrorMessage: err.authError})});
+                        return new Error("Authentication Error");
+                    }
                     return resp.json();
                 })
                 .then((response) => {
                     this.props.addUserId(response.userId);
                     return this.props.determineLogIn(response.isLoggedIn);
                 })
-                .then(() => this.props.history.push("/"));
+                .then(() => this.props.history.push("/"))
+                .catch(err => {
+                    console.log("Authentication error!");
+                });
             }
         }
     }
@@ -93,8 +101,17 @@ class LoginPage extends Component {
     }
 
     render() {
+        let errorMessage = null;
+        if (this.state.loginErrorMessage) {
+            errorMessage =
+                <Alert bsStyle="danger">
+                    {this.state.loginErrorMessage}
+                </Alert>;
+        }
+
         return (
             <Form horizontal onSubmit={this.onFormSubmit}>
+                {errorMessage}
                 <FormGroup controlId="formEmail" validationState={this.validateEmail()}>
                     <Col componentClass={ControlLabel} sm={2}>
                         Email

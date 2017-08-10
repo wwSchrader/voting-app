@@ -7,15 +7,12 @@ module.exports = function(passport) {
     passport.authenticate('local', { failWithError: true, flashFailure: true }),
     function(req, res) {
       // handle success
-      console.log("success!!!");
       console.log(req.user);
       return res.json({isLoggedIn: true, userId: req.user._id});
     },
     function(err, req, res, next) {
       // handle error
-      console.log("failed auth");
-      console.log(err);
-      return res.status(401).send(req.flash('authMessage')[0]);
+      return res.status(401).json({authError: req.flash('authMessage')[0]});
     }
   );
 
