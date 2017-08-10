@@ -1,5 +1,5 @@
 import { votes, voteHasErrored, votesIsLoading, singlePoll } from './votes.js';
-import { userIsSignedIn } from './user.js';
+import { userIsSignedIn, userIdNumber } from './user.js';
 import { combineReducers } from 'redux'
 
 const voteApp = combineReducers({
@@ -7,7 +7,8 @@ const voteApp = combineReducers({
     singlePoll,
     voteHasErrored,
     votesIsLoading,
-    userIsSignedIn
+    userIsSignedIn,
+    userIdNumber
 });
 
 export default voteApp;

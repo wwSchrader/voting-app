@@ -7,7 +7,9 @@ module.exports = function(passport) {
     passport.authenticate('local', { failWithError: true, flashFailure: true }),
     function(req, res) {
       // handle success
-      return res.json({isLoggedIn: true});
+      console.log("success!!!");
+      console.log(req.user);
+      return res.json({isLoggedIn: true, userId: req.user._id});
     },
     function(err, req, res, next) {
       // handle error

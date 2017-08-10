@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Form, FormGroup, FormControl, Col, Button, ControlLabel } from 'react-bootstrap';
 import { connect } from 'react-redux';
-import { isLoggedIn } from './actions/index';
+import { isLoggedIn, userIdFetchSuccess } from './actions/index';
 
 class LoginPage extends Component {
     constructor(props) {
@@ -48,6 +48,7 @@ class LoginPage extends Component {
         })
         .then((response) => {
             console.log(response.isLoggedIn);
+            this.props.addUserId(response.userId);
             return this.props.determineLogIn(response.isLoggedIn);
         })
         .then(() => this.props.history.push("/"));
@@ -95,7 +96,8 @@ class LoginPage extends Component {
 const mapDispatchToProps = (dispatch) => {
     console.log(isLoggedIn);
     return {
-        determineLogIn: (bool) => dispatch(isLoggedIn(bool))
+        determineLogIn: (bool) => dispatch(isLoggedIn(bool)),
+        addUserId: (userId) => dispatch(userIdFetchSuccess(userId))
     };
 };
 

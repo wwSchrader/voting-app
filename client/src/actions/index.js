@@ -44,11 +44,17 @@ export function votesCreatedPollsByUser(items) {
 }
 
 export function isLoggedIn(bool){
-    console.log(bool);
     return {
         type: 'USER_IS_LOGGED_IN',
         isLoggedIn: bool
     };
+}
+
+export function userIdFetchSuccess(items) {
+    return {
+        type: 'USER_ID_FETCH_SUCCESSFUL',
+        userId: items
+    }
 }
 
 export function votesFetchData() {
@@ -99,7 +105,7 @@ export function votesFetchSinglePoll(pollId) {
     return (dispatch) => {
         dispatch (votesIsLoading(true));
 
-        fetch("/api/getpoll/?id=" + pollId)
+        fetch("/api/getpoll/?id=" + pollId, {credentials: 'include'})
             .then((response) => {
                 if (!response.ok) {
                     throw Error(response.statusText);

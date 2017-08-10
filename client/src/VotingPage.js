@@ -151,8 +151,10 @@ class VotingPage extends Component {
         }
 
         let voteSelectionForm = null;
-        //show voting options if ip address does not one in the list
+        let deletePollButton = null;
+
         if (this.props.singlePoll.voterList !== undefined) {
+            //show voting options if ip address does not one in the list
             if (this.props.singlePoll.voterList.indexOf(this.props.singlePoll.userIp) === -1) {
                 voteSelectionForm = <form onSubmit={this.handleFormSubmit}>
                     <FormGroup>
@@ -167,6 +169,11 @@ class VotingPage extends Component {
             } else {
                 voteSelectionForm = <h3>Thank you for your vote!</h3>;
             }
+            if (this.props.singlePoll.creatorId === this.props.userIdNumber) {
+                deletePollButton = <Button bsStyle="danger" onClick={() => this.deletePoll()}>
+                        Delete Poll
+                </Button>;
+            }
         }
 
         return(
@@ -174,9 +181,7 @@ class VotingPage extends Component {
                 <h3>Vote: {this.props.singlePoll.voteName}</h3>
                 {voteSelectionForm}
                 <Pie data={chartData} />
-                <Button bsStyle="danger" onClick={() => this.deletePoll()}>
-                        Delete Poll
-                </Button>
+                {deletePollButton}
             </div>
         );
     }
@@ -187,7 +192,8 @@ const mapStateToProps = (state) => {
         singlePoll: state.singlePoll,
         hasErrored: state.voteHasErrored,
         isLoading: state.votesIsLoading,
-        userIsSignedIn: state.userIsSignedIn
+        userIsSignedIn: state.userIsSignedIn,
+        userIdNumber: state.userIdNumber
     };
 };
 

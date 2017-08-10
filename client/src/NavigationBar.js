@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Navbar, Nav, NavItem } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import { connect } from 'react-redux';
-import { isLoggedIn } from './actions/index';
+import { isLoggedIn, userIdFetchSuccess } from './actions/index';
 
 class NavigationBar extends Component {
   constructor(props) {
@@ -23,6 +23,7 @@ class NavigationBar extends Component {
           return resp.json()})
         .then((response) => {
             console.log(response.isLoggedIn);
+            this.props.clearUserId();
             return this.props.determineLogIn(response.isLoggedIn);
         })
         .then(() => this.props.history.push("/login"));
@@ -31,7 +32,6 @@ class NavigationBar extends Component {
 
 
   render() {
-    console.log(this.props.location);
     let loginNav = null;
     let myPollsNav = null;
     let newPollNav = null;
@@ -77,9 +77,9 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = (dispatch) => {
-    console.log(isLoggedIn);
     return {
-        determineLogIn: (bool) => dispatch(isLoggedIn(bool))
+        determineLogIn: (bool) => dispatch(isLoggedIn(bool)),
+        clearUserId: () => dispatch(userIdFetchSuccess(null))
     };
 };
 

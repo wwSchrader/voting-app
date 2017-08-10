@@ -13,7 +13,6 @@ router.get('/', function(req, res) {
             res.sendStatus(500)
             console.log(e);
         });
-
 });
 
 router.delete('/', ensureAuthenticated, function(req, res) {
