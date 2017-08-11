@@ -9,7 +9,6 @@ import RegistrationPage from './RegistrationPage.js';
 import MyPollsPage from './MyPollsPage.js';
 import { Route } from 'react-router-dom';
 
-
 class App extends Component {
   render() {
     return (

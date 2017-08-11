@@ -10,6 +10,21 @@ class NavigationBar extends Component {
     this.onLogOut = this.onLogOut.bind(this);
   }
 
+  //check to see if user had signed in previously
+  componentDidMount() {
+    fetch("api/auth/isloggedIn", {method: 'get', credentials: 'include'})
+      .then(response => {
+        if (response.status === 401) {
+          this.props.determineLogIn(false);
+        } else {
+          this.props.determineLogIn(true);
+        }
+      })
+      .catch(ex => {
+        console.log(ex);
+      });
+    }
+
   onLogOut(e) {
     e.preventDefault();
 

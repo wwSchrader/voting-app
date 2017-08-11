@@ -1,8 +1,13 @@
 var express = require('express');
 var router = express.Router();
 var bcrypt = require('bcrypt');
+var { ensureAuthenticated } = require('../library.js');
 
 module.exports = function(passport) {
+  router.get('/isloggedIn', ensureAuthenticated, (req, res) => {
+    res.sendStatus(200);
+  });
+
   router.post('/login',
     passport.authenticate(['local', 'facebook'], { failWithError: true, flashFailure: true }),
     function(req, res) {
