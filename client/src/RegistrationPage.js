@@ -102,39 +102,41 @@ class RegistrationPage extends Component {
                 </Alert>;
         }
         return (
-            <Form horizontal onSubmit={this.onFormSubmit}>
-                {errorMessage}
-                <FormGroup controlId="formEmail" validationState={this.validateEmail()}>
-                    <Col componentClass={ControlLabel} sm={2}>
-                        Email
-                    </Col>
-                    <Col sm={10}>
-                        <FormControl type="email" placeholder="Email" onChange={this.onEmailChange} value={this.state.email}/>
-                        {this.renderHelpBock(this.validateEmail())}
-                         <FormControl.Feedback />
-                    </Col>
+            <Col md={4} mdOffset={4}>
+                <h2> Registration Page</h2>
+                <Form horizontal onSubmit={this.onFormSubmit}>
+                    {errorMessage}
+                    <FormGroup controlId="formEmail" validationState={this.validateEmail()}>
+                        <Col componentClass={ControlLabel} sm={2}>
+                            Email
+                        </Col>
+                        <Col sm={10}>
+                            <FormControl type="email" placeholder="Email" onChange={this.onEmailChange} value={this.state.email}/>
+                            {this.renderHelpBock(this.validateEmail())}
+                             <FormControl.Feedback />
+                        </Col>
 
-                </FormGroup>
-                <FormGroup controlId="formPassword" validationState={this.validatePassword()}>
-                    <Col componentClass={ControlLabel} sm={2}>
-                        Password
-                    </Col>
-                    <Col sm={10}>
-                        <FormControl type="password" placeholder="Password" onChange={this.onPasswordChange} value={this.state.password}/>
-                        {this.renderHelpBock(this.validateEmail())}
-                        <FormControl.Feedback />
-                    </Col>
-                </FormGroup>
+                    </FormGroup>
+                    <FormGroup controlId="formPassword" validationState={this.validatePassword()}>
+                        <Col componentClass={ControlLabel} sm={2}>
+                            Password
+                        </Col>
+                        <Col sm={10}>
+                            <FormControl type="password" placeholder="Password" onChange={this.onPasswordChange} value={this.state.password}/>
+                            {this.renderHelpBock(this.validateEmail())}
+                            <FormControl.Feedback />
+                        </Col>
+                    </FormGroup>
 
-                <FormGroup>
-                    <Col smOffset={2} sm={10}>
-                        <Button bsStyle="primary" type="submit">
-                            Sign up
-                        </Button>
-                    </Col>
-                </FormGroup>
-
-            </Form>
+                    <FormGroup>
+                        <Col smOffset={2} sm={10}>
+                            <Button bsStyle="primary" type="submit">
+                                Sign up
+                            </Button>
+                        </Col>
+                    </FormGroup>
+                </Form>
+            </Col>
         );
     }
 
