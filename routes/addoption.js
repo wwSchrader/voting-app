@@ -3,7 +3,7 @@ var router = express.Router();
 var { ensureAuthenticated } = require('../library.js');
 
 router.put('/', ensureAuthenticated, function(req, res) {
-    req.datastore.addOptionAndVote(req.query.id, req.query.votename)
+    req.datastore.addOptionAndVote(req.query.id, req.query.votename, req.ip)
         .then(response => {
             res.sendStatus(200);
         })

@@ -123,14 +123,15 @@ function addVoteToOption(pollId, optionIndex, voterIpAddress) {
   });
 }
 
-function addOptionAndVote(pollId, newOptionName) {
+function addOptionAndVote(pollId, newOptionName, voterIpAddress) {
   return new Promise(function (resolve, reject) {
     try {
       //push new vote option and give it a vote
       pollCollection.updateOne({"_id": ObjectId(pollId)},
         { $push:
           { "voteOptions":
-            {"optionName": newOptionName, "optionVotes": 1}
+            {"optionName": newOptionName, "optionVotes": 1},
+            "voterList": voterIpAddress
           }
         })
         .then(function (result) {
