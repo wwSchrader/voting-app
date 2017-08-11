@@ -1,0 +1,9 @@
+.social-media-btns {
+    margin: 10px;
+    display: inline-block;
+    text-align: center;
+}
+
+FacebookShareButton TwitterShareButton {
+    margin: 10px;
+}
