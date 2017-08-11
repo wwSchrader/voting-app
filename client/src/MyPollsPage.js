@@ -20,6 +20,7 @@ class MyPollsPage extends Component {
 
     return (
       <div className="VoteListButtons">
+        <h2> My Polls </h2>
         {voteButton}
       </div>
     );
