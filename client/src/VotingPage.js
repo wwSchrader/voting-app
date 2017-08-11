@@ -3,6 +3,15 @@ import { connect } from 'react-redux';
 import { votesFetchSinglePoll } from './actions';
 import { FormGroup, Radio, ControlLabel, Button, InputGroup, FormControl } from 'react-bootstrap';
 import {Pie} from 'react-chartjs-2';
+import { ShareButtons, generateShareIcon } from 'react-share';
+import './VotingPage.css';
+const {
+  FacebookShareButton,
+  TwitterShareButton,
+} = ShareButtons;
+
+const FacebookIcon = generateShareIcon('facebook');
+const TwitterIcon = generateShareIcon('twitter');
 
 class VotingPage extends Component {
     constructor(props) {
@@ -175,11 +184,28 @@ class VotingPage extends Component {
                 </Button>;
             }
         }
-
         return(
             <div>
                 <h3>Vote: {this.props.singlePoll.voteName}</h3>
                 {voteSelectionForm}
+                <div className="social-media-btns">
+                    <FacebookShareButton
+                        title={"Vote on: " + this.props.singlePoll.voteName}
+                        url={window.location.href}>
+                        <FacebookIcon
+                          size={32}
+                          round />
+                    </FacebookShareButton>
+                </div>
+                <div className="social-media-btns">
+                    <TwitterShareButton
+                        title={"Vote on: " + this.props.singlePoll.voteName}
+                        url={window.location.href}>
+                        <TwitterIcon
+                          size={32}
+                          round />
+                    </TwitterShareButton>
+                </div>
                 <Pie data={chartData} />
                 {deletePollButton}
             </div>
