@@ -4,7 +4,7 @@ var bcrypt = require('bcrypt');
 
 module.exports = function(passport) {
   router.post('/login',
-    passport.authenticate('local', { failWithError: true, flashFailure: true }),
+    passport.authenticate(['local', 'facebook'], { failWithError: true, flashFailure: true }),
     function(req, res) {
       // handle success
       console.log(req.user);
@@ -15,6 +15,14 @@ module.exports = function(passport) {
       return res.status(401).json({authError: req.flash('authMessage')[0]});
     }
   );
+
+  //faceboot authenticate route
+  router.get('/facebook', passport.authenticate('facebook', { scope: ['email']}));
+  router.get('/facebook/callback',
+        passport.authenticate('facebook', {
+            successRedirect : 'http://localhost:3000/',
+            failureRedirect : 'http://localhost:3000/login'
+        }));
 
   router.get('/logout', function(req, res) {
     req.logout();

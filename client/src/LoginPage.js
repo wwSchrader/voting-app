@@ -141,9 +141,9 @@ class LoginPage extends Component {
                         <Button onClick={() => this.props.history.push("/register")}>
                             Register
                         </Button>
+                        <a href="http://localhost:3001/api/auth/facebook" className="btn btn-primary"><span className="fa fa-facebook"></span> Facebook</a>
                     </Col>
                 </FormGroup>
-
             </Form>
         );
     }

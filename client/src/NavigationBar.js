@@ -29,8 +29,6 @@ class NavigationBar extends Component {
         .then(() => this.props.history.push("/login"));
   }
 
-
-
   render() {
     let loginNav = null;
     let myPollsNav = null;

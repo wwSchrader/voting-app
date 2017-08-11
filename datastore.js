@@ -30,6 +30,28 @@ function findUserById(userId) {
   });
 }
 
+function findOrCreateUser(profileId, facebookId) {
+  return new Promise((resolve, reject) => {
+    try {
+      userCollection.findAndModify(
+        profileId,
+        null,
+        {$setOnInsert: {username: profileId.username, facebookId: facebookId.facebookId}},
+        {new: true, upsert:true},
+        (err, data) => {
+          if (err) {
+            console.log(err);
+            reject(err);
+          } else {
+            resolve(data);
+          }
+        });
+    } catch (ex) {
+      reject(ex);
+    }
+  });
+}
+
 
 function findUser(userName) {
   return new Promise(function (resolve, reject) {
@@ -373,6 +395,7 @@ function DatastoreUnknownExceptionGetAll(ex) {
 var asyncDatastore = {
   findUserById: findUserById,
   findUser: findUser,
+  findOrCreateUser: findOrCreateUser,
   addUser: addUser,
   insert: insert,
   set: set,

@@ -9,6 +9,7 @@ var datastore = require("./datastore").async;
 var passport = require('passport');
 var session = require('express-session');
 var LocalStrategy = require('passport-local').Strategy;
+var FacebookStrategy = require('passport-facebook').Strategy;
 var flash = require('connect-flash');
 var bcrypt = require('bcrypt');
 
@@ -64,6 +65,25 @@ passport.use(new LocalStrategy(
           })
       })
       .catch(ex => {
+        return done(ex);
+      });
+  }
+));
+
+passport.use(new FacebookStrategy({
+    clientID: process.env.FACEBOOK_APP_ID,
+    clientSecret: process.env.FACEBOOK_APP_SECRET,
+    callbackURL: "http://localhost:3001/api/auth/facebook/callback",
+    profileFields: ['email']
+  },
+  function(accessToken, refreshToken, profile, done) {
+    datastore.findOrCreateUser({username: profile.emails[0].value}, {facebookId: profile.id})
+      .then(response => {
+        return done(null, response.value);
+      })
+      .catch(ex => {
+        console.log("facebook failure");
+        console.log(ex);
         return done(ex);
       });
   }
