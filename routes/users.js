@@ -5,7 +5,7 @@ var { ensureAuthenticated } = require('../library.js');
 
 module.exports = function(passport) {
   router.get('/isloggedIn', ensureAuthenticated, (req, res) => {
-    res.sendStatus(200);
+    res.status(200).json({userId: req.session.passport.user});
   });
 
   router.post('/login',

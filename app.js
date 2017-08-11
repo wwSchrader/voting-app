@@ -59,7 +59,6 @@ passport.use(new LocalStrategy(
             if (!pswdMatch) {
               return done(null, false, req.flash( 'authMessage', 'Incorrect password'));
             } else {
-              console.log("credentials match");
               return done(null, response);
             }
           })
