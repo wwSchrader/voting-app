@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { votesFetchSinglePoll } from './actions';
-import { FormGroup, Radio, ControlLabel, Button, InputGroup, FormControl } from 'react-bootstrap';
+import { FormGroup, Radio, ControlLabel, Button, InputGroup, FormControl, Col } from 'react-bootstrap';
 import {Pie} from 'react-chartjs-2';
 import { ShareButtons, generateShareIcon } from 'react-share';
 import './VotingPage.css';
@@ -165,7 +165,8 @@ class VotingPage extends Component {
         if (this.props.singlePoll.voterList !== undefined) {
             //show voting options if ip address does not one in the list
             if (this.props.singlePoll.voterList.indexOf(this.props.singlePoll.userIp) === -1) {
-                voteSelectionForm = <form onSubmit={this.handleFormSubmit}>
+                voteSelectionForm =
+                <form onSubmit={this.handleFormSubmit}>
                     <FormGroup>
                         <ControlLabel>Vote for an option:</ControlLabel>
                         {options}
@@ -174,7 +175,7 @@ class VotingPage extends Component {
                     <Button type="submit" bsStyle="primary">
                         Vote
                     </Button>
-                </form>;
+                </form>
             } else {
                 voteSelectionForm = <h3>Thank you for your vote!</h3>;
             }
@@ -187,27 +188,31 @@ class VotingPage extends Component {
         return(
             <div>
                 <h3>Vote: {this.props.singlePoll.voteName}</h3>
-                {voteSelectionForm}
-                <div className="social-media-btns">
-                    <FacebookShareButton
-                        title={"Vote on: " + this.props.singlePoll.voteName}
-                        url={window.location.href}>
-                        <FacebookIcon
-                          size={32}
-                          round />
-                    </FacebookShareButton>
-                </div>
-                <div className="social-media-btns">
-                    <TwitterShareButton
-                        title={"Vote on: " + this.props.singlePoll.voteName}
-                        url={window.location.href}>
-                        <TwitterIcon
-                          size={32}
-                          round />
-                    </TwitterShareButton>
-                </div>
-                <Pie data={chartData} />
-                {deletePollButton}
+                <Col md={6}>
+                    {voteSelectionForm}
+                    <div className="social-media-btns">
+                        <FacebookShareButton
+                            title={"Vote on: " + this.props.singlePoll.voteName}
+                            url={window.location.href}>
+                            <FacebookIcon
+                              size={32}
+                              round />
+                        </FacebookShareButton>
+                    </div>
+                    <div className="social-media-btns">
+                        <TwitterShareButton
+                            title={"Vote on: " + this.props.singlePoll.voteName}
+                            url={window.location.href}>
+                            <TwitterIcon
+                              size={32}
+                              round />
+                        </TwitterShareButton>
+                    </div>
+                </Col>
+                <Col md={6}>
+                    <Pie data={chartData} />
+                    {deletePollButton}
+                </Col>
             </div>
         );
     }

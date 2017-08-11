@@ -14,7 +14,7 @@ class NavigationBar extends Component {
   componentDidMount() {
     fetch("api/auth/isloggedIn", {method: 'get', credentials: 'include'})
       .then(response => {
-        if (response.status === 401) {
+        if (response.status !== 200) {
           this.props.determineLogIn(false);
         } else {
           this.props.determineLogIn(true);
