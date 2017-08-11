@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import update from 'immutability-helper';
-import { PageHeader, FormGroup, ControlLabel, FormControl, Button, HelpBlock } from 'react-bootstrap';
+import { PageHeader, FormGroup, ControlLabel, FormControl, Button, HelpBlock, Col } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { createVote } from './actions';
+import './NewVotePage.css';
 
 class NewVotePage extends Component {
     constructor(props) {
@@ -178,7 +179,7 @@ class NewVotePage extends Component {
       <div className="Home">
         <PageHeader>Create a new Vote.</PageHeader>
         <p>Fill out the form below to create your vote!</p>
-
+        <Col md={4} mdOffset={4}>
           <form onSubmit={this.onSubmitButtonPress}>
             <FormGroup controlId="formVoteName" validationState={this.validateName()}>
                 <ControlLabel>Vote Name</ControlLabel>
@@ -201,6 +202,7 @@ class NewVotePage extends Component {
                 Create Vote
             </Button>
           </form>
+        </Col>
       </div>
     );
   }
