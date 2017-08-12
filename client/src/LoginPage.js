@@ -109,6 +109,11 @@ class LoginPage extends Component {
                 </Alert>;
         }
 
+        let baseURL = null;
+        if ((process.env.NODE_ENV || 'development') === 'development') {
+          baseURL = 'http://localhost:3001';
+        }
+
         return (
             <Col md={4} mdOffset={4}>
                 <h2> Sign In </h2>
@@ -148,7 +153,7 @@ class LoginPage extends Component {
                 </Form>
                 <h4> Or sign in with: </h4>
                 <Col smOffset={2} sm={10}>
-                    <a href="http://localhost:3001/api/auth/facebook" className="btn btn-primary"><span className="fa fa-facebook"></span> Facebook</a>
+                    <a href={baseURL + "/api/auth/facebook"} className="btn btn-primary"><span className="fa fa-facebook"></span> Facebook</a>
                 </Col>
             </Col>
         );
