@@ -6,7 +6,7 @@ class HomePage extends Component {
   render() {
     return (
       <div className="Home">
-        <PageHeader>fcc Voting App</PageHeader>
+        <PageHeader>Voting App</PageHeader>
         <p>Select a poll to see results and vote, or sign-in to make a new poll.</p>
         <VoteListButtons />
       </div>
