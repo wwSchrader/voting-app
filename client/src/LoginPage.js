@@ -113,7 +113,7 @@ class LoginPage extends Component {
         if ((process.env.NODE_ENV || 'development') === 'development') {
           facebookURL = 'http://localhost:3001/api/auth/facebook';
         } else {
-          facebookURL = 'api/auth/facebook';
+          facebookURL = '/api/auth/facebook';
         }
 
         return (
