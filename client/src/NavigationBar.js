@@ -12,7 +12,7 @@ class NavigationBar extends Component {
 
   //check to see if user had signed in previously
   componentDidMount() {
-    fetch("api/auth/isloggedIn", {method: 'get', credentials: 'include'})
+    fetch("/api/auth/isloggedIn", {method: 'get', credentials: 'include'})
       .then(response => {
         if (response.status !== 200) {
           this.props.determineLogIn(false);
