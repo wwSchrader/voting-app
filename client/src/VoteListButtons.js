@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { votesFetchData } from './actions/index';
 import PollTitleButton from './PollTitleButton.js';
+import LoadingPage from './LoadingPage.js';
 
 class VoteListButtons extends Component {
     componentDidMount() {
@@ -9,18 +10,24 @@ class VoteListButtons extends Component {
     }
 
   render() {
-    let voteButton = this.props.votes.map((vote, index) => {
-        return (
-            <PollTitleButton
-                key={vote._id}
-                pollId={vote._id}
-                pollName={vote.voteName}/>
-        );
-    });
+    let displayPage = null;
+    if (this.props.isLoading) {
+        displayPage = <LoadingPage />
+    } else {
+        displayPage = this.props.votes.map((vote, index) => {
+            return (
+                <PollTitleButton
+                    key={vote._id}
+                    pollId={vote._id}
+                    pollName={vote.voteName}/>
+            );
+        });
+    }
+
 
     return (
       <div className="VoteListButtons">
-        {voteButton}
+        {displayPage}
       </div>
     );
   }
