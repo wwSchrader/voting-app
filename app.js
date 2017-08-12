@@ -78,7 +78,7 @@ passport.use(new FacebookStrategy({
     profileFields: ['email']
   },
   function(accessToken, refreshToken, profile, done) {
-    consoel.log("facebook search");
+    console.log("facebook search");
     datastore.findOrCreateUser({username: profile.emails[0].value}, {facebookId: profile.id})
       .then(response => {
         console.log("facebook success");
